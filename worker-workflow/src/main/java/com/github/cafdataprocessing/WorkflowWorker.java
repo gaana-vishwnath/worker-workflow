@@ -36,8 +36,6 @@ import com.hpe.caf.worker.document.model.HealthMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.ExecutionException;
-
 /**
  * Worker that will examine task received for a workflow ID, retrieve that workflow using a processing API and generate
  * a JavaScript representation of the workflow that the Document can be executed against to determine the action to perform
