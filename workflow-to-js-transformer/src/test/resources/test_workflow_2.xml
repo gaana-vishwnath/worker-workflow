@@ -1,0 +1,157 @@
+<!--
+
+    Copyright 2015-2017 EntIT Software LLC, a Micro Focus company.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<workflow>
+    <details>
+        <name>String conditions workflow</name>
+        <description></description>
+        <notes></notes>
+        <id>1</id>
+    </details>
+    <processingRules>
+        <processingRule>
+            <details>
+                <name>String conditions rule</name>
+                <description></description>
+                <id>1</id>
+                <priority>100</priority>
+                <enabled>true</enabled>
+            </details>
+            <actions>
+                <action>
+                    <details>
+                        <settings class="map"/>
+                        <name>String &apos;is&apos; Action</name>
+                        <description></description>
+                        <typeInternalName>CompositeDocumentWorkerHandler</typeInternalName>
+                        <typeId>1</typeId>
+                        <id>1</id>
+                        <order>100</order>
+                    </details>
+                    <conditions>
+                        <condition>
+                            <name>String is</name>
+                            <additional class="com.github.cafdataprocessing.processing.service.client.model.StringConditionAdditional">
+                                <type>string</type>
+                                <field>CONTENT</field>
+                                <order>100</order>
+                                <value>CAT</value>
+                                <operator>is</operator>
+                            </additional>
+                            <id>1</id>
+                        </condition>
+                    </conditions>
+                </action>
+                <action>
+                    <details>
+                        <settings class="map"/>
+                        <name>String &apos;starts with&apos; Action</name>
+                        <description></description>
+                        <typeInternalName>CompositeDocumentWorkerHandler</typeInternalName>
+                        <typeId>1</typeId>
+                        <id>2</id>
+                        <order>200</order>
+                    </details>
+                    <conditions>
+                        <condition>
+                            <name>String starts with</name>
+                            <additional class="com.github.cafdataprocessing.processing.service.client.model.StringConditionAdditional">
+                                <type>string</type>
+                                <field>CONTENT</field>
+                                <order>100</order>
+                                <value>DOG</value>
+                                <operator>starts_with</operator>
+                            </additional>
+                            <id>2</id>
+                        </condition>
+                    </conditions>
+                </action>
+                <action>
+                    <details>
+                        <settings class="map"/>
+                        <name>String &apos;ends with</name>
+                        <description></description>
+                        <typeInternalName>CompositeDocumentWorkerHandler</typeInternalName>
+                        <typeId>1</typeId>
+                        <id>3</id>
+                        <order>300</order>
+                    </details>
+                    <conditions>
+                        <condition>
+                            <name>String ends with</name>
+                            <additional class="com.github.cafdataprocessing.processing.service.client.model.StringConditionAdditional">
+                                <type>string</type>
+                                <field>CONTENT</field>
+                                <order>100</order>
+                                <value>mouse</value>
+                                <operator>ends_with</operator>
+                            </additional>
+                            <id>3</id>
+                        </condition>
+                    </conditions>
+                </action>
+                <action>
+                    <details>
+                        <settings class="map"/>
+                        <name>Starts and ends with</name>
+                        <description></description>
+                        <typeInternalName>CompositeDocumentWorkerHandler</typeInternalName>
+                        <typeId>1</typeId>
+                        <id>4</id>
+                        <order>400</order>
+                    </details>
+                    <conditions>
+                        <condition>
+                            <name>Starts and ends with</name>
+                            <additional class="com.github.cafdataprocessing.processing.service.client.model.BooleanConditionAdditional">
+                                <type>boolean</type>
+                                <children>
+                                    <condition>
+                                        <name>String &apos;starts with&apos; rat</name>
+                                        <additional class="com.github.cafdataprocessing.processing.service.client.model.StringConditionAdditional">
+                                            <type>string</type>
+                                            <field>BOOLEAN_STRING_TEST</field>
+                                            <order>100</order>
+                                            <value>rat</value>
+                                            <operator>starts_with</operator>
+                                        </additional>
+                                        <id>4</id>
+                                    </condition>
+                                    <condition>
+                                        <name>String &apos;ends with&apos; there</name>
+                                        <additional class="com.github.cafdataprocessing.processing.service.client.model.StringConditionAdditional">
+                                            <type>string</type>
+                                            <field>BOOLEAN_STRING_TEST</field>
+                                            <order>200</order>
+                                            <value>there</value>
+                                            <operator>ends_with</operator>
+                                        </additional>
+                                        <id>5</id>
+                                    </condition>
+                                </children>
+                                <operator>and</operator>
+                                <order>100</order>
+                            </additional>
+                            <id>6</id>
+                        </condition>
+                    </conditions>
+                </action>
+            </actions>
+            <conditions/>
+        </processingRule>
+    </processingRules>
+</workflow>
