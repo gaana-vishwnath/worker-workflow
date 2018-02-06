@@ -62,7 +62,7 @@ final class WorkflowEvaluator
         if(response.getCustomData()!=null){
             customData.putAll(response.getCustomData());
         }
-        customData.put(DocumentWorkerConstants.POST_PROCESSING_SCRIPT_CUSTOM_DATA, workflowStorageReference);
+        customData.put("postProcessingScript", workflowStorageReference);
         response.setCustomData(customData);
 
     }
