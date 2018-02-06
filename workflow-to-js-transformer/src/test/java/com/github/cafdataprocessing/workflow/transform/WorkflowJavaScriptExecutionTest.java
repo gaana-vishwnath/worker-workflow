@@ -209,9 +209,9 @@ public class WorkflowJavaScriptExecutionTest {
         checkActionIdToExecute(testDocument_1, Long.toString(entityExtractAction.getActionId()));
 
         // check that the response options have been set as expected
-        String setQueueName = testDocument_1.getTask().getResponseOptions().getQueueNameOverride();
+        String setQueueName = testDocument_1.getTask().getResponse().getQueueNameOverride();
         Assert.assertEquals(setQueueName, entityExtractQueueName, "Queue name should have been set to expected queue.");
-        Map<String, String> setCustomData = testDocument_1.getTask().getResponseOptions().getCustomData();
+        Map<String, String> setCustomData = testDocument_1.getTask().getResponse().getCustomData();
         Assert.assertTrue(setCustomData.containsKey(entityExtractOpModeKey),
                 "Custom data should have the entity extract operation mode key.");
         String setOpModeValue = (String) setCustomData.get(entityExtractOpModeKey);
@@ -391,7 +391,7 @@ public class WorkflowJavaScriptExecutionTest {
 
         // expecting action on first enabled rule to be marked for execution
         checkActionIdToExecute(document, "10");
-        Map<String, String> returnedCustomData = document.getTask().getResponseOptions().getCustomData();
+        Map<String, String> returnedCustomData = document.getTask().getResponse().getCustomData();
 
         // check that the simple string property has been set
         String simpleProperty = returnedCustomData.get("another_prop");
@@ -501,7 +501,7 @@ public class WorkflowJavaScriptExecutionTest {
         invocable.invokeFunction("processDocument", documentWithoutScript);
 
         Task returnedTask = documentWithoutScript.getTask();
-        Map<String, String> returnedCustomData = returnedTask.getResponseOptions().getCustomData();
+        Map<String, String> returnedCustomData = returnedTask.getResponse().getCustomData();
         Assert.assertNull(returnedCustomData, "Expecting no custom data to be set in response options " +
                 " when post processing script not passed to processDocument method.");
 
@@ -517,7 +517,7 @@ public class WorkflowJavaScriptExecutionTest {
                 .documentBuilder().build();
         invocable.invokeFunction("processDocument", documentWithScript);
         String secondReturnedScriptValue =
-                documentWithScript.getTask().getResponseOptions().getCustomData().get(POST_PROCESSING_NAME);
+                documentWithScript.getTask().getResponse().getCustomData().get(POST_PROCESSING_NAME);
         Assert.assertEquals(secondReturnedScriptValue, postProcessingScriptRef, "Expecting post processing script to be set in response options " +
                 " when it has been passed on document custom data.");
     }
@@ -592,7 +592,7 @@ public class WorkflowJavaScriptExecutionTest {
         // check that custom data that was set can be serialized (Nashorn ScriptObjectMirror will fail to serialize
         // if it ends up in custom data)
         Codec codec = new JsonCodec();
-        byte[] serializedCustomData = codec.serialise(document.getTask().getResponseOptions().getCustomData());
+        byte[] serializedCustomData = codec.serialise(document.getTask().getResponse().getCustomData());
         Assert.assertNotNull(serializedCustomData, "Custom data from first call should have been serialized.");
 
         // invoke again which should cause next action to be marked for execution
@@ -601,7 +601,7 @@ public class WorkflowJavaScriptExecutionTest {
         checkActionIdToExecute(document, "2");
         checkActionsCompleted(document, Arrays.asList("1"));
         checkPostProcessingSet(document, postProcessingScriptRef);
-        serializedCustomData = codec.serialise(document.getTask().getResponseOptions().getCustomData());
+        serializedCustomData = codec.serialise(document.getTask().getResponse().getCustomData());
         Assert.assertNotNull(serializedCustomData, "Custom data from second call should have been serialized.");
 
         // invoke again to start final rule and verify all completed actions and rules are persisted
@@ -609,7 +609,7 @@ public class WorkflowJavaScriptExecutionTest {
 
         checkActionIdToExecute(document, "3");
         checkActionsCompleted(document, Arrays.asList("1", "2"));
-        serializedCustomData = codec.serialise(document.getTask().getResponseOptions().getCustomData());
+        serializedCustomData = codec.serialise(document.getTask().getResponse().getCustomData());
         Assert.assertNotNull(serializedCustomData, "Custom data from third call should have been serialized.");
         HashMap deserializedCustomData = codec.deserialise(serializedCustomData, HashMap.class);
         Assert.assertNotNull(deserializedCustomData, "Deserialized custom data should not be null.");
@@ -640,7 +640,7 @@ public class WorkflowJavaScriptExecutionTest {
     }
 
     private void checkPostProcessingSet(Document document, String expectedPostProcessingValue){
-        String actualPostProcessingValue = document.getTask().getResponseOptions().getCustomData()
+        String actualPostProcessingValue = document.getTask().getResponse().getCustomData()
                 .get(POST_PROCESSING_NAME);
         Assert.assertNotNull(actualPostProcessingValue,
                 "Expecting post processing field to have been set on task response options.");

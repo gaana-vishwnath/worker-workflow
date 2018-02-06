@@ -294,9 +294,9 @@
 
             // Update document destination queue to that specified by action and pass appropriate settings and customData
             var queueToSet = !isEmpty(actionDetails.queueName) ? actionDetails.queueName : actionDetails.workerName+"Input";
-            var responseOptions = document.getTask().getResponseOptions();
-            responseOptions.setQueueNameOverride(queueToSet);
-            responseOptions.setCustomData(responseCustomData);
+            var response = document.getTask().getResponse();
+            response.setQueueNameOverride(queueToSet);
+            response.setCustomData(responseCustomData);
             return ACTION_TO_EXECUTE;
         }
 

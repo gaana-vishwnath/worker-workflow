@@ -19,7 +19,7 @@ import com.hpe.caf.worker.document.DocumentWorkerConstants;
 import com.hpe.caf.worker.document.JavaScriptDocumentPostProcessor;
 import com.hpe.caf.worker.document.exceptions.PostProcessingFailedException;
 import com.hpe.caf.worker.document.model.Document;
-import com.hpe.caf.worker.document.model.ResponseOptions;
+import com.hpe.caf.worker.document.model.Response;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,13 +57,13 @@ final class WorkflowEvaluator
      * @param workflowStorageReference DataStore reference for a workflow that can be executed in post processing.
      */
     private static void setWorkflowPostProcessingScript(final Document document, final String workflowStorageReference){
-        final ResponseOptions responseOptions = document.getTask().getResponseOptions();
+        final Response response = document.getTask().getResponse();
         final Map<String, String> customData = new HashMap<>();
-        if(responseOptions.getCustomData()!=null){
-            customData.putAll(responseOptions.getCustomData());
+        if(response.getCustomData()!=null){
+            customData.putAll(response.getCustomData());
         }
         customData.put(DocumentWorkerConstants.POST_PROCESSING_SCRIPT_CUSTOM_DATA, workflowStorageReference);
-        responseOptions.setCustomData(customData);
+        response.setCustomData(customData);
 
     }
 }
