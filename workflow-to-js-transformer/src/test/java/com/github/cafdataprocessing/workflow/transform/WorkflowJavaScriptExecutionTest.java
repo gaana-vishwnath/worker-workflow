@@ -209,7 +209,7 @@ public class WorkflowJavaScriptExecutionTest {
         checkActionIdToExecute(testDocument_1, Long.toString(entityExtractAction.getActionId()));
 
         // check that the response options have been set as expected
-        String setQueueName = testDocument_1.getTask().getResponseOptions().getQueueName();
+        String setQueueName = testDocument_1.getTask().getResponseOptions().getQueueNameOverride();
         Assert.assertEquals(setQueueName, entityExtractQueueName, "Queue name should have been set to expected queue.");
         Map<String, String> setCustomData = testDocument_1.getTask().getResponseOptions().getCustomData();
         Assert.assertTrue(setCustomData.containsKey(entityExtractOpModeKey),
