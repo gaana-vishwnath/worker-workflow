@@ -71,10 +71,10 @@ public class WorkflowJavaScriptExecutionTest {
         final String outputActionId = "32";
 
         final Invocable invocable = getInvocableWorkflowJavaScriptFromJS(workflowJSStr);
-        TestServices testServices = TestServices.createDefault();
-        DataStore store = testServices.getDataStore();
-        String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
-        Document document = DocumentBuilder.configure()
+        final TestServices testServices = TestServices.createDefault();
+        final DataStore store = testServices.getDataStore();
+        final String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
+        final Document document = DocumentBuilder.configure()
                 .withServices(testServices)
                 .withFields()
                 .addFieldValue("CONTENT", "test")
@@ -102,7 +102,7 @@ public class WorkflowJavaScriptExecutionTest {
         checkActionsCompleted(document, Arrays.asList(familyHashingActionId, langDetectActionId));
 
         // verify that if a document that does not meet the criteria is passed that it does not try to execute the action
-        Document document_doesntMatchEntityExtract = DocumentBuilder.configure()
+        final Document document_doesntMatchEntityExtract = DocumentBuilder.configure()
                 .withServices(testServices)
                 .withFields()
                 .addFieldValue("CONTENT", "test")
@@ -134,25 +134,25 @@ public class WorkflowJavaScriptExecutionTest {
             "is queued for execution with its settings.")
     public void fieldMappingActionTest() throws WorkerException, URISyntaxException, IOException,
             WorkflowTransformerException, ScriptException, NoSuchMethodException {
-        Map<String, Object> fieldMappingSettings = new HashMap<>();
-        Map<String, String> mappings = new HashMap<>();
-        String abcFieldKey = "abc";
-        String abcFieldValue = UUID.randomUUID().toString();
-        String defFieldKey = "def";
-        String defFieldValue_1 = UUID.randomUUID().toString();
-        String defFieldValue_2 = UUID.randomUUID().toString();
-        String ghiFieldKey = "ghi";
-        String ghiFieldValue = UUID.randomUUID().toString();
-        String jklFieldKey = "jkl";
-        String jklFieldValue = UUID.randomUUID().toString();
-        String mnoFieldKey = "mno";
-        String pqrFieldKey = "pqr";
-        String pqrFieldValueStr = UUID.randomUUID().toString();
-        String pqrFieldValueRef = UUID.randomUUID().toString();
-        String stuFieldKey = "stu";
-        String stuFieldValue = UUID.randomUUID().toString();
-        String vwxFieldKey = "vwx";
-        String vwxFieldValue = UUID.randomUUID().toString();
+        final Map<String, Object> fieldMappingSettings = new HashMap<>();
+        final Map<String, String> mappings = new HashMap<>();
+        final String abcFieldKey = "abc";
+        final String abcFieldValue = UUID.randomUUID().toString();
+        final String defFieldKey = "def";
+        final String defFieldValue_1 = UUID.randomUUID().toString();
+        final String defFieldValue_2 = UUID.randomUUID().toString();
+        final String ghiFieldKey = "ghi";
+        final String ghiFieldValue = UUID.randomUUID().toString();
+        final String jklFieldKey = "jkl";
+        final String jklFieldValue = UUID.randomUUID().toString();
+        final String mnoFieldKey = "mno";
+        final String pqrFieldKey = "pqr";
+        final String pqrFieldValueStr = UUID.randomUUID().toString();
+        final String pqrFieldValueRef = UUID.randomUUID().toString();
+        final String stuFieldKey = "stu";
+        final String stuFieldValue = UUID.randomUUID().toString();
+        final String vwxFieldKey = "vwx";
+        final String vwxFieldValue = UUID.randomUUID().toString();
         mappings.put(abcFieldKey, defFieldKey);
         mappings.put(defFieldKey, abcFieldKey);
         mappings.put(ghiFieldKey, defFieldKey);
@@ -160,35 +160,35 @@ public class WorkflowJavaScriptExecutionTest {
         mappings.put(pqrFieldKey, stuFieldKey);
         fieldMappingSettings.put("mappings", mappings);
 
-        FullAction fieldMappingAction =
+        final FullAction fieldMappingAction =
                 BUILDER.buildFullAction("Field Mapping Action", new ArrayList<>(Arrays.asList()), 100,
                         fieldMappingSettings, "FieldMappingActionType");
 
-        Map<String, Object> entityExtractSettings = new HashMap<>();
-        Map<String, String> entityExtractCustomData = new HashMap<>();
-        String entityExtractOpModeKey = "OPERATION_MODE";
-        String entityExtractOpModeValue = "DETECT";
+        final Map<String, Object> entityExtractSettings = new HashMap<>();
+        final Map<String, String> entityExtractCustomData = new HashMap<>();
+        final String entityExtractOpModeKey = "OPERATION_MODE";
+        final String entityExtractOpModeValue = "DETECT";
         entityExtractCustomData.put(entityExtractOpModeKey, entityExtractOpModeValue);
-        String entityExtractGrammarMapKey = "GRAMMAR_MAP";
-        String enityExtractGrammarMapValue = "{pii.xml: []}";
+        final String entityExtractGrammarMapKey = "GRAMMAR_MAP";
+        final String enityExtractGrammarMapValue = "{pii.xml: []}";
         entityExtractCustomData.put(entityExtractGrammarMapKey, enityExtractGrammarMapValue);
         entityExtractSettings.put("customData", entityExtractCustomData);
         entityExtractSettings.put("workerName", "entityextractworkerhandler");
 
-        String entityExtractQueueName = UUID.randomUUID().toString();
+        final String entityExtractQueueName = UUID.randomUUID().toString();
         entityExtractSettings.put("queueName", entityExtractQueueName);
 
-        FullAction entityExtractAction =
+        final FullAction entityExtractAction =
                 BUILDER.buildFullAction("Entity Extract Action", new ArrayList<>(Arrays.asList()), 200,
                         entityExtractSettings, "ChainedActionType");
 
-        FullProcessingRule rule =
+        final FullProcessingRule rule =
                 BUILDER.buildFullProcessingRule("Processing Rule", true, 100,
                         new ArrayList<>(Arrays.asList(fieldMappingAction, entityExtractAction)),
                         new ArrayList<>(Arrays.asList()));
-        FullWorkflow workflow = BUILDER.buildFullWorkflow("Workflow", new ArrayList<>(Arrays.asList(rule)));
-        TestServices testServices = TestServices.createDefault();
-        Document testDocument_1 = DocumentBuilder.configure()
+        final FullWorkflow workflow = BUILDER.buildFullWorkflow("Workflow", new ArrayList<>(Arrays.asList(rule)));
+        final TestServices testServices = TestServices.createDefault();
+        final Document testDocument_1 = DocumentBuilder.configure()
                 .withServices(testServices)
                 .withFields()
                 .addFieldValue(abcFieldKey, abcFieldValue)
@@ -209,29 +209,29 @@ public class WorkflowJavaScriptExecutionTest {
         checkActionIdToExecute(testDocument_1, Long.toString(entityExtractAction.getActionId()));
 
         // check that the response options have been set as expected
-        String setQueueName = testDocument_1.getTask().getResponse().getQueueNameOverride();
+        final String setQueueName = testDocument_1.getTask().getResponse().getQueueNameOverride();
         Assert.assertEquals(setQueueName, entityExtractQueueName, "Queue name should have been set to expected queue.");
-        Map<String, String> setCustomData = testDocument_1.getTask().getResponse().getCustomData();
+        final Map<String, String> setCustomData = testDocument_1.getTask().getResponse().getCustomData();
         Assert.assertTrue(setCustomData.containsKey(entityExtractOpModeKey),
                 "Custom data should have the entity extract operation mode key.");
-        String setOpModeValue = (String) setCustomData.get(entityExtractOpModeKey);
+        final String setOpModeValue = (String) setCustomData.get(entityExtractOpModeKey);
         Assert.assertEquals(setOpModeValue, entityExtractOpModeValue,
                 "Entity Extract Op mode value on returned custom data should have been set to expected value.");
         Assert.assertTrue(setCustomData.containsKey(entityExtractGrammarMapKey),
                 "Custom data should have the entity extract grammar map key.");
-        String setGrammarMapValue = (String) setCustomData.get(entityExtractGrammarMapKey);
+        final String setGrammarMapValue = (String) setCustomData.get(entityExtractGrammarMapKey);
         Assert.assertEquals(setGrammarMapValue, enityExtractGrammarMapValue,
                 "Entity Extract Grammar Map value on returned custom data should have been set to expected value.");
 
         // verify that fields have been remapped as expected
         // abc value & ghi value should now be in the def field
-        Field updatedDefField = testDocument_1.getField(defFieldKey);
-        FieldValues updatedDefFieldValues = updatedDefField.getValues();
+        final Field updatedDefField = testDocument_1.getField(defFieldKey);
+        final FieldValues updatedDefFieldValues = updatedDefField.getValues();
         boolean abcValuePresent = false;
         boolean ghiValuePresent = false;
         Assert.assertEquals(updatedDefFieldValues.size(), 2, "Expecting two values to be present in 'def' field after mapping.");
-        for(FieldValue updatedDefFieldValue: updatedDefFieldValues) {
-            String fieldValueStr = updatedDefFieldValue.getStringValue();
+        for(final FieldValue updatedDefFieldValue: updatedDefFieldValues) {
+            final String fieldValueStr = updatedDefFieldValue.getStringValue();
             if(abcFieldValue.equals(fieldValueStr)){
                 abcValuePresent = true;
             }
@@ -242,30 +242,30 @@ public class WorkflowJavaScriptExecutionTest {
         // 'abc' and 'ghi' field values should now be in 'dhi'
         Assert.assertTrue(abcValuePresent, "Value from 'abc' field was not present in 'def' field.");
         Assert.assertTrue(ghiValuePresent, "Value from 'ghi' field was not present in 'def' field.");
-        Field updatedGhiField = testDocument_1.getField(ghiFieldKey);
+        final Field updatedGhiField = testDocument_1.getField(ghiFieldKey);
         Assert.assertTrue(!updatedGhiField.hasValues(), "'ghi' field should have no values after mapping.");
 
         // both 'def' values should now be in the 'abc' field
-        Field updatedAbcField = testDocument_1.getField(abcFieldKey);
+        final Field updatedAbcField = testDocument_1.getField(abcFieldKey);
         Assert.assertEquals(updatedAbcField.getValues().size(), 2, "'abc' field should have 2 values after mapping.");
-        List<String> updatedAbcStrValues = updatedAbcField.getStringValues();
+        final List<String> updatedAbcStrValues = updatedAbcField.getStringValues();
         Assert.assertTrue(updatedAbcStrValues.contains(defFieldValue_1), "'def' value 1 should have been mapped to 'abc'");
         Assert.assertTrue(updatedAbcStrValues.contains(defFieldValue_2), "'def' value 2 should have been mapped to 'abc'");
 
         // 'jkl' values should be in 'mno' which was previously empty
-        Field updatedJklField = testDocument_1.getField(jklFieldKey);
+        final Field updatedJklField = testDocument_1.getField(jklFieldKey);
         Assert.assertTrue(!updatedJklField.hasValues(), "'jkl' field should have no values after mapping.");
-        Field updatedMnoField = testDocument_1.getField(mnoFieldKey);
+        final Field updatedMnoField = testDocument_1.getField(mnoFieldKey);
         Assert.assertEquals(updatedMnoField.getValues().size(), 1, "'mno' field should have 1 value after mapping.");
-        List<String> updatedMnoValues = updatedMnoField.getStringValues();
+        final List<String> updatedMnoValues = updatedMnoField.getStringValues();
         Assert.assertTrue(updatedMnoValues.contains(jklFieldValue), "'jkl' value should have been mapped to 'mno'");
 
         // 'pqr' string and reference values should be added to 'stu' which was previously populated
-        Field updatedPqrField = testDocument_1.getField(pqrFieldKey);
+        final Field updatedPqrField = testDocument_1.getField(pqrFieldKey);
         Assert.assertTrue(!updatedPqrField.hasValues(), "'pqr' field should have no values after mapping.");
-        Field updatedStuField = testDocument_1.getField(stuFieldKey);
-        List<String> updatedStuStrValues = updatedStuField.getStringValues();
-        FieldValues updatedStuValues = updatedStuField.getValues();
+        final Field updatedStuField = testDocument_1.getField(stuFieldKey);
+        final List<String> updatedStuStrValues = updatedStuField.getStringValues();
+        final FieldValues updatedStuValues = updatedStuField.getValues();
         Assert.assertEquals(updatedStuValues.size(), 3, "'stu' field should have 3 values after mapping.");
         Assert.assertEquals(updatedStuStrValues.size(), 2, "'stu' field should have 2 string values after mapping.");
         Assert.assertTrue(updatedStuStrValues.contains(pqrFieldValueStr),
@@ -274,16 +274,16 @@ public class WorkflowJavaScriptExecutionTest {
                 "Original 'stu' string value should still be present on 'stu'");
 
         boolean stuReferenceFound = false;
-        Iterator<FieldValue> stuValuesIterator = updatedStuValues.iterator();
+        final Iterator<FieldValue> stuValuesIterator = updatedStuValues.iterator();
         while(stuValuesIterator.hasNext()){
-            FieldValue updatedStuFieldValue = stuValuesIterator.next();
+            final FieldValue updatedStuFieldValue = stuValuesIterator.next();
             if(!updatedStuFieldValue.isReference()){
                 continue;
             }
             else {
                 stuReferenceFound = true;
             }
-            String stuFieldReferenceValue = updatedStuFieldValue.getReference();
+            final String stuFieldReferenceValue = updatedStuFieldValue.getReference();
             Assert.assertEquals(stuFieldReferenceValue, pqrFieldValueRef,
                     "'pqr' reference value should have been mapped to 'stu'.");
         }
@@ -294,52 +294,52 @@ public class WorkflowJavaScriptExecutionTest {
     public void stringConditionTest() throws WorkerException, DataStoreException, IOException, ScriptException,
             WorkflowTransformerException, URISyntaxException, NoSuchMethodException {
         // build a workflow that uses string conditions
-        String contentFieldName = "CONTENT";
-        String contentIsValue = "CAT";
-        ExistingCondition contentIsCondition = BUILDER.buildStringCondition("String is", contentFieldName, contentIsValue, 100,
+        final String contentFieldName = "CONTENT";
+        final String contentIsValue = "CAT";
+        final ExistingCondition contentIsCondition = BUILDER.buildStringCondition("String is", contentFieldName, contentIsValue, 100,
                 StringConditionAdditional.OperatorEnum.IS);
-        FullAction stringIsAction = BUILDER.buildFullAction("String 'is' Action",
+        final FullAction stringIsAction = BUILDER.buildFullAction("String 'is' Action",
                 new ArrayList<>(Arrays.asList(contentIsCondition)), 100, new HashMap<>());
 
-        String contentStartsWithValue = "DOG";
-        ExistingCondition contentStartsWithCondition = BUILDER.buildStringCondition("String starts with", contentFieldName,
+        final String contentStartsWithValue = "DOG";
+        final ExistingCondition contentStartsWithCondition = BUILDER.buildStringCondition("String starts with", contentFieldName,
                 contentStartsWithValue, 100, StringConditionAdditional.OperatorEnum.STARTS_WITH);
-        FullAction stringStartsWithAction = BUILDER.buildFullAction("String 'starts with' Action",
+        final FullAction stringStartsWithAction = BUILDER.buildFullAction("String 'starts with' Action",
                 new ArrayList<>(Arrays.asList(contentStartsWithCondition)), 200, new HashMap<>());
 
-        String contentEndsWithValue = "mouse";
-        ExistingCondition contentEndsWithCondition = BUILDER.buildStringCondition("String ends with", contentFieldName,
+        final String contentEndsWithValue = "mouse";
+        final ExistingCondition contentEndsWithCondition = BUILDER.buildStringCondition("String ends with", contentFieldName,
                 contentEndsWithValue, 100, StringConditionAdditional.OperatorEnum.ENDS_WITH);
-        FullAction stringEndsWithAction = BUILDER.buildFullAction("String 'ends with",
+        final FullAction stringEndsWithAction = BUILDER.buildFullAction("String 'ends with",
                 new ArrayList<>(Arrays.asList(contentEndsWithCondition)), 300, new HashMap<>());
 
-        String startsAndEndsWith_fieldName = "BOOLEAN_STRING_TEST";
-        String startsAndEndsWith_startsWithValue = "rat";
-        String startsAndEndsWith_endsWithValue = "there";
-        ExistingCondition startsAndEndsWith_startsCondition = BUILDER.buildStringCondition("String 'starts with' rat",
+        final String startsAndEndsWith_fieldName = "BOOLEAN_STRING_TEST";
+        final String startsAndEndsWith_startsWithValue = "rat";
+        final String startsAndEndsWith_endsWithValue = "there";
+        final ExistingCondition startsAndEndsWith_startsCondition = BUILDER.buildStringCondition("String 'starts with' rat",
                 startsAndEndsWith_fieldName, startsAndEndsWith_startsWithValue, 100,
                 StringConditionAdditional.OperatorEnum.STARTS_WITH);
-        ExistingCondition startsAndEndsWith_endsWithCondition = BUILDER.buildStringCondition("String 'ends with' there",
+        final ExistingCondition startsAndEndsWith_endsWithCondition = BUILDER.buildStringCondition("String 'ends with' there",
                 startsAndEndsWith_fieldName, startsAndEndsWith_endsWithValue, 200,
                 StringConditionAdditional.OperatorEnum.ENDS_WITH);
-        ExistingCondition startsAndEndsWith_booleanCondition = BUILDER.buildBooleanCondition("Starts and ends with", 100,
+        final ExistingCondition startsAndEndsWith_booleanCondition = BUILDER.buildBooleanCondition("Starts and ends with", 100,
                 BooleanConditionAdditional.OperatorEnum.AND, new ArrayList<>(Arrays.asList(startsAndEndsWith_startsCondition,
                         startsAndEndsWith_endsWithCondition)));
-        FullAction booleanStartsAndEnds = BUILDER.buildFullAction("Starts and ends with",
+        final FullAction booleanStartsAndEnds = BUILDER.buildFullAction("Starts and ends with",
                 new ArrayList<>(Arrays.asList(startsAndEndsWith_booleanCondition)), 400, new HashMap<>());
 
-        FullProcessingRule rule = BUILDER.buildFullProcessingRule("String conditions rule", true, 100,
+        final FullProcessingRule rule = BUILDER.buildFullProcessingRule("String conditions rule", true, 100,
                 new ArrayList<>(Arrays.asList(stringIsAction, stringStartsWithAction, stringEndsWithAction, booleanStartsAndEnds)),
                 new ArrayList<>());
-        FullWorkflow workflow = BUILDER.buildFullWorkflow("String conditions workflow", new ArrayList<>(Arrays.asList(rule)));
+        final FullWorkflow workflow = BUILDER.buildFullWorkflow("String conditions workflow", new ArrayList<>(Arrays.asList(rule)));
 
-        TestServices testServices = TestServices.createDefault();
-        DataStore store = testServices.getDataStore();
-        String dataStoreValue = "DOG IN THE HOUSE.";
-        String dataStoreRef = store.store(dataStoreValue.getBytes(), "test");
-        String byteArrValue = "There is a mouse";
+        final TestServices testServices = TestServices.createDefault();
+        final DataStore store = testServices.getDataStore();
+        final String dataStoreValue = "DOG IN THE HOUSE.";
+        final String dataStoreRef = store.store(dataStoreValue.getBytes(), "test");
+        final String byteArrValue = "There is a mouse";
 
-        Document testDocument_1 = DocumentBuilder.configure()
+        final Document testDocument_1 = DocumentBuilder.configure()
                 .withServices(testServices)
                 .withFields()
                 .addFieldValue(startsAndEndsWith_fieldName, "rat over there")
@@ -376,11 +376,11 @@ public class WorkflowJavaScriptExecutionTest {
             URISyntaxException, NoSuchMethodException, DataStoreException {
         final String workflowJSStr = getWorkflowJavaScriptFromXML("/test_workflow_3.xml");
         final Invocable invocable = getInvocableWorkflowJavaScriptFromJS(workflowJSStr);
-        TestServices testServices = TestServices.createDefault();
-        DataStore store = testServices.getDataStore();
-        String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
+        final TestServices testServices = TestServices.createDefault();
+        final DataStore store = testServices.getDataStore();
+        final String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
 
-        Document document = DocumentBuilder.configure()
+        final Document document = DocumentBuilder.configure()
                 .withServices(testServices)
                 .withFields()
                 .addFieldValue("test", "string_value").documentBuilder()
@@ -391,39 +391,39 @@ public class WorkflowJavaScriptExecutionTest {
 
         // expecting action on first enabled rule to be marked for execution
         checkActionIdToExecute(document, "10");
-        Map<String, String> returnedCustomData = document.getTask().getResponse().getCustomData();
+        final Map<String, String> returnedCustomData = document.getTask().getResponse().getCustomData();
 
         // check that the simple string property has been set
-        String simpleProperty = returnedCustomData.get("another_prop");
+        final String simpleProperty = returnedCustomData.get("another_prop");
         Assert.assertEquals(simpleProperty, "second value", "Returned simple string property should have expected value.");
 
         // check that the property that specified an invalid source was not set
-        String invalidProperty = returnedCustomData.get("invalid_prop");
+        final String invalidProperty = returnedCustomData.get("invalid_prop");
         Assert.assertNull(invalidProperty, "Expecting property with an invalid source to not have been returned on " +
                 "custom data.");
 
-        String jsonProperty = returnedCustomData.get("test_prop");
+        final String jsonProperty = returnedCustomData.get("test_prop");
         Assert.assertNotNull(jsonProperty, "The inline json data property should not be null on response custom data.");
         // test that deserializable string is output
-        JSONObject deserializedObject = new JSONObject(jsonProperty);
-        JSONObject topLevelProperty = ((JSONObject) deserializedObject.get("myObject"));
+        final JSONObject deserializedObject = new JSONObject(jsonProperty);
+        final JSONObject topLevelProperty = ((JSONObject) deserializedObject.get("myObject"));
         Assert.assertNotNull(topLevelProperty, "A node 'myObject' should exist.");
-        String myKeyProperty = topLevelProperty.getString("myKey");
+        final String myKeyProperty = topLevelProperty.getString("myKey");
         Assert.assertEquals(myKeyProperty, " myValue", "Expecting 'myKey' property to be expected value.");
-        JSONArray intArrayProperty = topLevelProperty.getJSONArray("intArray");
+        final JSONArray intArrayProperty = topLevelProperty.getJSONArray("intArray");
         Assert.assertNotNull(intArrayProperty, "Expecting int array to have been returned.");
-        List<Integer> expectedIntValues = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
+        final List<Integer> expectedIntValues = new ArrayList<>(Arrays.asList(1, 2, 3, 4));
         for(int intArrayIndex=0; intArrayIndex < intArrayProperty.length(); intArrayIndex++){
-            int returnedIntValue = intArrayProperty.getInt(intArrayIndex);
+            final int returnedIntValue = intArrayProperty.getInt(intArrayIndex);
             Assert.assertTrue(expectedIntValues.contains(returnedIntValue), "Expected returned value to be present in " +
                     "list of expected values.");
             expectedIntValues.remove(new Integer(returnedIntValue));
         }
         Assert.assertTrue(expectedIntValues.isEmpty(), "Expected all values to have been matched in returned array.");
-        JSONArray myArrayProperty = topLevelProperty.getJSONArray("myArray");
+        final JSONArray myArrayProperty = topLevelProperty.getJSONArray("myArray");
         Assert.assertEquals(myArrayProperty.length(), 4, "Expecting 4 entries returned on 'myArray'.");
         for(int myArrayIndex=0; myArrayIndex < myArrayProperty.length(); myArrayIndex++){
-            JSONObject currentArrayEntry = myArrayProperty.getJSONObject(myArrayIndex);
+            final JSONObject currentArrayEntry = myArrayProperty.getJSONObject(myArrayIndex);
             switch (currentArrayEntry.keys().next()){
                 case "myNullValue":
                     Assert.assertTrue(currentArrayEntry.isNull("myNullValue"),
@@ -455,10 +455,10 @@ public class WorkflowJavaScriptExecutionTest {
             URISyntaxException, NoSuchMethodException, DataStoreException {
         final String workflowJSStr = getWorkflowJavaScriptFromXML("/test_workflow_3.xml");
         final Invocable invocable = getInvocableWorkflowJavaScriptFromJS(workflowJSStr);
-        TestServices testServices = TestServices.createDefault();
-        DataStore store = testServices.getDataStore();
-        String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
-        Document document = DocumentBuilder.configure()
+        final TestServices testServices = TestServices.createDefault();
+        final DataStore store = testServices.getDataStore();
+        final String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
+        final Document document = DocumentBuilder.configure()
                 .withServices(testServices)
                 .withFields()
                 .addFieldValue("test", "string_value").documentBuilder()
@@ -491,7 +491,7 @@ public class WorkflowJavaScriptExecutionTest {
             "data of the document and that it is set if it is passed.")
     public void checkPostProcessingFieldSetAsExpected() throws WorkerException, IOException, ScriptException,
             WorkflowTransformerException, URISyntaxException, NoSuchMethodException, DataStoreException {
-        Document documentWithoutScript = DocumentBuilder.configure()
+        final Document documentWithoutScript = DocumentBuilder.configure()
                 .withFields()
                 .addFieldValue("test", "string_value").documentBuilder()
                 .withCustomData()
@@ -500,15 +500,15 @@ public class WorkflowJavaScriptExecutionTest {
         final Invocable invocable = getInvocableWorkflowJavaScriptFromJS(workflowJSStr);
         invocable.invokeFunction("processDocument", documentWithoutScript);
 
-        Task returnedTask = documentWithoutScript.getTask();
-        Map<String, String> returnedCustomData = returnedTask.getResponse().getCustomData();
+        final Task returnedTask = documentWithoutScript.getTask();
+        final Map<String, String> returnedCustomData = returnedTask.getResponse().getCustomData();
         Assert.assertNull(returnedCustomData, "Expecting no custom data to be set in response options " +
                 " when post processing script not passed to processDocument method.");
 
-        TestServices testServices = TestServices.createDefault();
-        DataStore store = testServices.getDataStore();
-        String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
-        Document documentWithScript = DocumentBuilder.configure()
+        final TestServices testServices = TestServices.createDefault();
+        final DataStore store = testServices.getDataStore();
+        final String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
+        final Document documentWithScript = DocumentBuilder.configure()
                 .withServices(testServices)
                 .withFields()
                 .addFieldValue("test", "string_value").documentBuilder()
@@ -516,7 +516,7 @@ public class WorkflowJavaScriptExecutionTest {
                 .add(POST_PROCESSING_NAME, postProcessingScriptRef)
                 .documentBuilder().build();
         invocable.invokeFunction("processDocument", documentWithScript);
-        String secondReturnedScriptValue =
+        final String secondReturnedScriptValue =
                 documentWithScript.getTask().getResponse().getCustomData().get(POST_PROCESSING_NAME);
         Assert.assertEquals(secondReturnedScriptValue, postProcessingScriptRef, "Expecting post processing script to be set in response options " +
                 " when it has been passed on document custom data.");
@@ -529,10 +529,10 @@ public class WorkflowJavaScriptExecutionTest {
             WorkflowTransformerException, NoSuchMethodException, DataStoreException {
         final String workflowJSStr = getWorkflowJavaScriptFromXML("/test_workflow_1.xml");
         final Invocable invocable = getInvocableWorkflowJavaScriptFromJS(workflowJSStr);
-        TestServices testServices = TestServices.createDefault();
-        DataStore store = testServices.getDataStore();
-        String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
-        Document document = DocumentBuilder.configure()
+        final TestServices testServices = TestServices.createDefault();
+        final DataStore store = testServices.getDataStore();
+        final String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
+        final Document document = DocumentBuilder.configure()
                 .withServices(testServices)
                 .withFields()
                 .addFieldValue("test", "string_value").documentBuilder()
@@ -574,10 +574,10 @@ public class WorkflowJavaScriptExecutionTest {
             WorkflowTransformerException, IOException, URISyntaxException, CodecException, DataStoreException {
         final String workflowJSStr = getWorkflowJavaScriptFromXML("/test_workflow_1.xml");
         final Invocable invocable = getInvocableWorkflowJavaScriptFromJS(workflowJSStr);
-        TestServices testServices = TestServices.createDefault();
-        DataStore store = testServices.getDataStore();
-        String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
-        Document document = DocumentBuilder.configure()
+        final TestServices testServices = TestServices.createDefault();
+        final DataStore store = testServices.getDataStore();
+        final String postProcessingScriptRef = store.store(workflowJSStr.getBytes(), "test");
+        final Document document = DocumentBuilder.configure()
                 .withServices(testServices)
                 .withFields()
                 .addFieldValue("CONTENT", "string_value").documentBuilder()
@@ -591,7 +591,7 @@ public class WorkflowJavaScriptExecutionTest {
 
         // check that custom data that was set can be serialized (Nashorn ScriptObjectMirror will fail to serialize
         // if it ends up in custom data)
-        Codec codec = new JsonCodec();
+        final Codec codec = new JsonCodec();
         byte[] serializedCustomData = codec.serialise(document.getTask().getResponse().getCustomData());
         Assert.assertNotNull(serializedCustomData, "Custom data from first call should have been serialized.");
 
@@ -611,36 +611,36 @@ public class WorkflowJavaScriptExecutionTest {
         checkActionsCompleted(document, Arrays.asList("1", "2"));
         serializedCustomData = codec.serialise(document.getTask().getResponse().getCustomData());
         Assert.assertNotNull(serializedCustomData, "Custom data from third call should have been serialized.");
-        HashMap deserializedCustomData = codec.deserialise(serializedCustomData, HashMap.class);
+        final HashMap deserializedCustomData = codec.deserialise(serializedCustomData, HashMap.class);
         Assert.assertNotNull(deserializedCustomData, "Deserialized custom data should not be null.");
-        Object postProcessReturnedObj = deserializedCustomData.get(POST_PROCESSING_NAME);
+        final Object postProcessReturnedObj = deserializedCustomData.get(POST_PROCESSING_NAME);
         Assert.assertEquals((String) postProcessReturnedObj, postProcessingScriptRef,
                 "Post processing set on deserialized custom data from response options should have expected value.");
-        Object grammarMapReturnedObj = deserializedCustomData.get("GRAMMAR_MAP");
+        final Object grammarMapReturnedObj = deserializedCustomData.get("GRAMMAR_MAP");
         Assert.assertEquals((String) grammarMapReturnedObj, "{pii.xml: []}",
                 "Grammar map set on deserialized custom data from response options should have expected value.");
     }
 
-    private void checkActionIdToExecute(Document document, String expectedActionId){
+    private void checkActionIdToExecute(final Document document, final String expectedActionId){
         Assert.assertEquals(document.getField("CAF_ACTION_TO_EXECUTE").getStringValues().size(), 1,
                 "Expecting next action to execute to have been added to the document and any previous values to have been removed.");
-        String returnedActionIdToExecute = document.getField("CAF_ACTION_TO_EXECUTE").getStringValues().get(0);
+        final String returnedActionIdToExecute = document.getField("CAF_ACTION_TO_EXECUTE").getStringValues().get(0);
         Assert.assertEquals(returnedActionIdToExecute, expectedActionId,
                 "Expecting action ID of "+expectedActionId+" to have been matched against test document.");
     }
 
-    private void checkActionsCompleted(Document document, List<String> expectedActionIds){
-        Field actionsCompletedField = document.getField("CAF_ACTIONS_COMPLETED");
+    private void checkActionsCompleted(final Document document, final List<String> expectedActionIds){
+        final Field actionsCompletedField = document.getField("CAF_ACTIONS_COMPLETED");
         Assert.assertEquals(actionsCompletedField.getStringValues().size(), expectedActionIds.size(),
                 "Completed actions should be the expected size.");
-        for(String expectedActionId: expectedActionIds) {
+        for(final String expectedActionId: expectedActionIds) {
             Assert.assertTrue( actionsCompletedField.getStringValues().contains(expectedActionId),
                     "Expected action: "+expectedActionId+" to have been marked as completed.");
         }
     }
 
-    private void checkPostProcessingSet(Document document, String expectedPostProcessingValue){
-        String actualPostProcessingValue = document.getTask().getResponse().getCustomData()
+    private void checkPostProcessingSet(final Document document, final String expectedPostProcessingValue){
+        final String actualPostProcessingValue = document.getTask().getResponse().getCustomData()
                 .get(POST_PROCESSING_NAME);
         Assert.assertNotNull(actualPostProcessingValue,
                 "Expecting post processing field to have been set on task response options.");
@@ -648,24 +648,24 @@ public class WorkflowJavaScriptExecutionTest {
                 "field value should be as expected.");
     }
 
-    private void checkRulesCompleted(Document document, List<String> expectedRuleIds){
-        Field rulesCompletedField = document.getField("CAF_PROCESSING_RULES_COMPLETED");
+    private void checkRulesCompleted(final Document document, final List<String> expectedRuleIds){
+        final Field rulesCompletedField = document.getField("CAF_PROCESSING_RULES_COMPLETED");
         Assert.assertEquals(rulesCompletedField.getStringValues().size(), expectedRuleIds.size(),
                 "Completed actions should be the expected size.");
-        for(String expectedRuleId: expectedRuleIds) {
+        for(final String expectedRuleId: expectedRuleIds) {
             Assert.assertTrue( rulesCompletedField.getStringValues().contains(expectedRuleId),
                     "Expected rule: "+expectedRuleId+" to have been marked as completed.");
         }
     }
 
-    private Invocable getInvocableWorkflowJavaScriptFromFullWorkflow(FullWorkflow workflow)
+    private Invocable getInvocableWorkflowJavaScriptFromFullWorkflow(final FullWorkflow workflow)
             throws WorkflowTransformerException, ScriptException, URISyntaxException, IOException {
-        String workflowAsXml = WorkflowTransformer.transformFullWorkflowToXml(workflow);
-        String workflowAsJS = WorkflowTransformer.transformXmlWorkflowToJavaScript(workflowAsXml);
+        final String workflowAsXml = WorkflowTransformer.transformFullWorkflowToXml(workflow);
+        final String workflowAsJS = WorkflowTransformer.transformXmlWorkflowToJavaScript(workflowAsXml);
         return getInvocableWorkflowJavaScriptFromJS(workflowAsJS);
     }
 
-    private Invocable getInvocableWorkflowJavaScriptFromJS(String workflowAsJS)
+    private Invocable getInvocableWorkflowJavaScriptFromJS(final String workflowAsJS)
             throws ScriptException {
         final ScriptEngineManager engineManager = new ScriptEngineManager();
         final ScriptEngine engine = engineManager.getEngineByName("nashorn");
@@ -673,26 +673,26 @@ public class WorkflowJavaScriptExecutionTest {
         return (Invocable) engine;
     }
 
-    private Invocable getInvocableWorkflowJavaScriptFromJSResource(String workflowAsJSResourceIdentifier)
+    private Invocable getInvocableWorkflowJavaScriptFromJSResource(final String workflowAsJSResourceIdentifier)
             throws ScriptException, URISyntaxException, IOException {
-        URL testWorkflowJsUrl = this.getClass().getResource(workflowAsJSResourceIdentifier);
-        Path workflowJsPath = Paths.get(testWorkflowJsUrl.toURI());
-        String workflowAsJS = new String(
+        final URL testWorkflowJsUrl = this.getClass().getResource(workflowAsJSResourceIdentifier);
+        final Path workflowJsPath = Paths.get(testWorkflowJsUrl.toURI());
+        final String workflowAsJS = new String(
                 Files.readAllBytes(workflowJsPath), StandardCharsets.UTF_8);
         return getInvocableWorkflowJavaScriptFromJS(workflowAsJS);
     }
 
-    private Invocable getInvocableWorkflowJavaScriptFromXML(String workflowXmlResourceIdentifier)
+    private Invocable getInvocableWorkflowJavaScriptFromXML(final String workflowXmlResourceIdentifier)
             throws URISyntaxException, IOException,
             ScriptException, WorkflowTransformerException {
-        String workflowAsJS = getWorkflowJavaScriptFromXML(workflowXmlResourceIdentifier);
+        final String workflowAsJS = getWorkflowJavaScriptFromXML(workflowXmlResourceIdentifier);
         return getInvocableWorkflowJavaScriptFromJS(workflowAsJS);
     }
 
-    private String getWorkflowJavaScriptFromXML(String workflowXmlResourceIdentifier)
+    private String getWorkflowJavaScriptFromXML(final String workflowXmlResourceIdentifier)
             throws IOException, URISyntaxException, WorkflowTransformerException {
-        URL testWorkflowXml = this.getClass().getResource(workflowXmlResourceIdentifier);
-        Path workflowXmlPath = Paths.get(testWorkflowXml.toURI());
+        final URL testWorkflowXml = this.getClass().getResource(workflowXmlResourceIdentifier);
+        final Path workflowXmlPath = Paths.get(testWorkflowXml.toURI());
 
         return WorkflowTransformer.transformXmlWorkflowToJavaScript(new String(
                 Files.readAllBytes(workflowXmlPath), StandardCharsets.UTF_8));
