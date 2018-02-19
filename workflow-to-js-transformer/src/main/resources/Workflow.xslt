@@ -264,11 +264,12 @@
         }
 
         function recordActionCompletedOrFailed(document){
-        if(!document.getField('CAF_ACTION_TO_EXECUTE').hasValues()){
-            return;
-        }
+            // this may be the first time the document has been presented to the workflow
+            if(!document.getField('CAF_ACTION_TO_EXECUTE').hasValues()){
+                return;
+            }
 
-        recordActionCompleted(document, document.getField('CAF_ACTION_TO_EXECUTE').getStringValues().get(0));
+            recordActionCompleted(document, document.getField('CAF_ACTION_TO_EXECUTE').getStringValues().get(0));
             document.getField('CAF_ACTION_TO_EXECUTE').clear();
         }
 
