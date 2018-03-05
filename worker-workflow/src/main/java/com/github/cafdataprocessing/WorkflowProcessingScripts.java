@@ -62,6 +62,7 @@ final class WorkflowProcessingScripts
                                                      final String scriptName) throws ScriptException
     {
         final Script scriptToAdd = document.getTask().getScripts().add();
+        scriptToAdd.setName(scriptName);
         switch (scriptType) {
             case StorageReference: {
                 scriptToAdd.setScriptByReference(script);
@@ -77,7 +78,6 @@ final class WorkflowProcessingScripts
                 throw new ScriptException("No valid script type passed.");
             }
         }
-        scriptToAdd.setName(scriptName);
     }
 
 }
