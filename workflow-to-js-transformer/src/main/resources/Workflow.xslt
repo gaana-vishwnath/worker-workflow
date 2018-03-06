@@ -10,15 +10,14 @@
         var System  = Java.type("java.lang.System")
         var DataStore = Java.type("com.hpe.caf.api.worker.DataStore");
         var ByteArray = Java.type("byte[]");
-        var postProcessingScriptPropertyName = "postProcessingScript";
 
         // Constants for return values
         var ACTION_TO_EXECUTE = 'actionToExecute';
         var CONDITIONS_NOT_MET = 'conditionsNotMet';
         var ALREADY_EXECUTED = 'alreadyExecuted';
 
-        function onAfterProcessTask(document){
-            processDocument(document);
+        function onAfterProcessTask(eventObj){
+            processDocument(eventObj.rootDocument); 
         }
 
         // Workflow ID: <xsl:value-of select="details/id"/>
@@ -295,11 +294,8 @@
                 updateActionStatus(document);
                 return ALREADY_EXECUTED;
             }
-            // propagate the post-processing field to response custom data if it exists on the document custom data
+            // propagate the custom data if it exists
             var responseCustomData = actionDetails.customData ? actionDetails.customData : {};
-            if(!isEmpty(document.getCustomData(postProcessingScriptPropertyName))){
-                responseCustomData[postProcessingScriptPropertyName] = document.getCustomData(postProcessingScriptPropertyName);
-            }
 
             // Update document destination queue to that specified by action and pass appropriate settings and customData
             var queueToSet = !isEmpty(actionDetails.queueName) ? actionDetails.queueName : actionDetails.workerName+"Input";
