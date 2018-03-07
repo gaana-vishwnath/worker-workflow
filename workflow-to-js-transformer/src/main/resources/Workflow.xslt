@@ -7,7 +7,7 @@
     <xsl:param name="projectId"/>
 
     <xsl:template match="/workflow">
-        var System  = Java.type("java.lang.System")
+        var System = Java.type("java.lang.System");
         var DataStore = Java.type("com.hpe.caf.api.worker.DataStore");
         var ByteArray = Java.type("byte[]");
 
