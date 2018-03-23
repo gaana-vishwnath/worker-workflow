@@ -15,13 +15,24 @@
  */
 package com.github.cafdataprocessing.workflow.transform;
 
+import com.github.cafdataprocessing.processing.service.client.ApiClient;
+import com.github.cafdataprocessing.processing.service.client.ApiException;
+import com.github.cafdataprocessing.processing.service.client.api.TenantConfigurationApi;
+import com.github.cafdataprocessing.processing.service.client.model.EffectiveTenantConfigValue;
+import com.hpe.caf.worker.document.exceptions.DocumentWorkerTransientException;
+import com.sun.jersey.api.client.ClientHandlerException;
 import java.util.Locale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Methods that are available to be called during Workflow XSLT transformation. These are intended to provide some useful
  * operations at transformation time.
  */
 public class TransformerFunctions {
+    
+    public static final Logger LOG = LoggerFactory.getLogger(TransformerFunctions.class);
+    
     /**
      * Checks system environment and system properties for the specified property name returning the value if it is found
      * or null if it is not. If both value is set for both environment and system property then the system property will
@@ -42,9 +53,49 @@ public class TransformerFunctions {
      * @return Queue value associated with specified worker name or null if no match found.
      */
     public static String getWorkerQueueFromEnvironment(final String workerName){
-        if(workerName==null || workerName.isEmpty()){
+        if (workerName == null || workerName.isEmpty()) {
             return null;
         }
         return getEnvironmentValue(workerName.toLowerCase(Locale.ENGLISH) + ".taskqueue");
+    }
+
+    /**
+     * Returns the value of the tenant's configuration that was requested.
+     *
+     * @param apiClientBaseUrl The base url of the processing service.
+     * @param tenantId A unique string that identifies the tenant.
+     * @param key The unique string used to identify a specific configuration.
+     * @return The string representation of the value of the configuration requested.
+     * @throws DocumentWorkerTransientException Thrown when the processing service is unreachable.
+     * @throws ApiException When an error occurs while trying to retrieve a config's value from the processing service.
+     */
+    public static String getTenantSpecificConfigValue(final String apiClientBaseUrl, final String tenantId, final String key)
+        throws DocumentWorkerTransientException, ApiException
+    {
+        final ApiClient apiClient = new ApiClient();
+        apiClient.setBasePath(apiClientBaseUrl);
+        final TenantConfigurationApi tenantsApi = new TenantConfigurationApi(apiClient);
+        try {
+            final EffectiveTenantConfigValue effectiveTenantConfigValue = tenantsApi.getEffectiveTenantConfig(tenantId, key);
+            LOG.debug("Retrieved value for tenant configuration using key: {}", key);
+            LOG.debug("Retrieved value for tenant configuration is of type: {}", effectiveTenantConfigValue.getValueType());
+            return effectiveTenantConfigValue.getValue();
+        } catch (final ApiException ex) {
+            if (ex.getCode() == 404) {
+                LOG.error("Unable to obtain tenant configuration from processing service for tenant: {} using key: {} as no configuration "
+                    + "could be found match the provided key", tenantId, key);
+                throw ex;
+            }
+            LOG.error("Unable to obtain tenant configuration from processing service for tenant: {} using key: {}", tenantId, key);
+            throw ex;
+        } catch (final ClientHandlerException ex) {
+            /**
+             * Wrapping this exception as an ApiException as it was caused by an in ability to contact the processing service. Wrapping it
+             * in an ApiException allows for this to be picked up be the calling code and it can then make a decision to retry as the
+             * connection problem may have been transient.
+             */
+            LOG.error("Unable to obtain tenant configuration from processing service for tenant: {} using key: {}", tenantId, key);
+            throw new ApiException(500, "Unable to contact processing service to retrieve tenant configs.");
+        }
     }
 }
