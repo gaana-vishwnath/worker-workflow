@@ -19,7 +19,6 @@ import com.github.cafdataprocessing.processing.service.client.ApiClient;
 import com.github.cafdataprocessing.processing.service.client.ApiException;
 import com.github.cafdataprocessing.processing.service.client.api.TenantConfigurationApi;
 import com.github.cafdataprocessing.processing.service.client.model.EffectiveTenantConfigValue;
-import com.hpe.caf.worker.document.exceptions.DocumentWorkerTransientException;
 import com.sun.jersey.api.client.ClientHandlerException;
 import java.util.Locale;
 import java.util.Objects;
@@ -67,12 +66,11 @@ public class TransformerFunctions {
      * @param tenantId A unique string that identifies the tenant.
      * @param key The unique string used to identify a specific configuration.
      * @return The string representation of the value of the configuration requested.
-     * @throws DocumentWorkerTransientException Thrown when the processing service is unreachable.
      * @throws ApiException When an error occurs while trying to retrieve a config's value from the processing service.
      * @throws NullPointerException When the tenantId or key passed to the method is null.
      */
     public static String getTenantSpecificConfigValue(final Object apiClientObject, final String tenantId, final String key)
-        throws DocumentWorkerTransientException, ApiException
+        throws ApiException
     {
         Objects.requireNonNull(tenantId);
         Objects.requireNonNull(key);
