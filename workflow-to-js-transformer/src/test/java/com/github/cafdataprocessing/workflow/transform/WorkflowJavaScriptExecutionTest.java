@@ -927,7 +927,7 @@ public class WorkflowJavaScriptExecutionTest {
         checkRulesCompleted(document, Arrays.asList("1", "2"));
     }
 
-    @Test(description = "Testst that custom data is correctly set from each action to execute, including that the set " +
+    @Test(description = "Test that custom data is correctly set from each action to execute, including that the set " +
             "custom data can be serialized.")
     public void handleCustomData() throws WorkerException, ScriptException, NoSuchMethodException,
             WorkflowTransformerException, IOException, URISyntaxException, CodecException, DataStoreException, ApiException {
