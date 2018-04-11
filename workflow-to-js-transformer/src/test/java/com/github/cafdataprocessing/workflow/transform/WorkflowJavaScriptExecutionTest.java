@@ -25,17 +25,18 @@ import com.github.cafdataprocessing.processing.service.client.model.StringCondit
 import com.github.cafdataprocessing.workflow.transform.models.FullAction;
 import com.github.cafdataprocessing.workflow.transform.models.FullProcessingRule;
 import com.github.cafdataprocessing.workflow.transform.models.FullWorkflow;
-import com.hpe.caf.api.Codec;
 import com.hpe.caf.api.CodecException;
 import com.hpe.caf.api.worker.DataStore;
 import com.hpe.caf.api.worker.DataStoreException;
 import com.hpe.caf.api.worker.WorkerException;
-import com.hpe.caf.codec.JsonCodec;
 import com.hpe.caf.worker.document.DocumentWorkerFieldEncoding;
 import com.hpe.caf.worker.document.model.Document;
 import com.hpe.caf.worker.document.model.Field;
 import com.hpe.caf.worker.document.model.FieldValue;
 import com.hpe.caf.worker.document.model.FieldValues;
+import com.hpe.caf.worker.document.model.Response;
+import com.hpe.caf.worker.document.model.ResponseCustomData;
+import com.hpe.caf.worker.document.model.ResponseQueue;
 import com.hpe.caf.worker.document.model.Script;
 import com.hpe.caf.worker.document.model.Scripts;
 import com.hpe.caf.worker.document.model.Task;
@@ -109,7 +110,7 @@ public class WorkflowJavaScriptExecutionTest {
         invocable.invokeFunction("processDocument", testDocument_1);
         checkActionIdToExecute(testDocument_1, Long.toString(testAction.getActionId()));
         final Task returnedTask = testDocument_1.getTask();
-        final Map<String, String> returnedCustomData = returnedTask.getResponse().getCustomData();
+        final ResponseCustomData returnedCustomData = returnedTask.getResponse().getCustomData();
         final String returnedTestPropertyValue = returnedCustomData.get(testPropertyKey);
         Assert.assertEquals(returnedTestPropertyValue, testPropertyValue, "Returned property that was set on custom data should" +
                 " be as expected.");
@@ -179,7 +180,7 @@ public class WorkflowJavaScriptExecutionTest {
         invocable.invokeFunction("processDocument", testDocument_1);
         checkActionIdToExecute(testDocument_1, Long.toString(testAction.getActionId()));
         final Task returnedTask = testDocument_1.getTask();
-        final Map<String, String> returnedCustomData = returnedTask.getResponse().getCustomData();
+        final ResponseCustomData returnedCustomData = returnedTask.getResponse().getCustomData();
         final String returnedTestPropertyValue = returnedCustomData.get(testPropertyKey);
         Assert.assertEquals(returnedTestPropertyValue, testPropertyValue, "Returned property that was set on custom data should" +
                 " be as expected.");
@@ -298,7 +299,7 @@ public class WorkflowJavaScriptExecutionTest {
         invocable.invokeFunction("processDocument", testDocument_1);
         checkActionIdToExecute(testDocument_1, Long.toString(testAction.getActionId()));
         final Task returnedTask = testDocument_1.getTask();
-        final Map<String, String> returnedCustomData = returnedTask.getResponse().getCustomData();
+        final ResponseCustomData returnedCustomData = returnedTask.getResponse().getCustomData();
         final String returnedTestPropertyValue = returnedCustomData.get(testPropertyKey);
         Assert.assertEquals(returnedTestPropertyValue, testPropertyValue, "Returned property that was set on custom data should" +
                 " be as expected.");
@@ -475,15 +476,20 @@ public class WorkflowJavaScriptExecutionTest {
         checkActionIdToExecute(testDocument_1, Long.toString(entityExtractAction.getActionId()));
 
         // check that the response options have been set as expected
-        final String setQueueName = testDocument_1.getTask().getResponse().getQueueNameOverride();
-        Assert.assertEquals(setQueueName, entityExtractQueueName, "Queue name should have been set to expected queue.");
-        final Map<String, String> setCustomData = testDocument_1.getTask().getResponse().getCustomData();
-        Assert.assertTrue(setCustomData.containsKey(entityExtractOpModeKey),
+        final Response response = testDocument_1.getTask().getResponse();
+        final ResponseQueue successQueue = response.getSuccessQueue();
+        Assert.assertTrue(successQueue.isEnabled(), "Success queue is disabled");
+        Assert.assertEquals(successQueue.getName(), entityExtractQueueName, "Success queue should have been set to expected queue.");
+        final ResponseQueue failureQueue = response.getFailureQueue();
+        Assert.assertTrue(failureQueue.isEnabled(), "Failure queue is disabled");
+        Assert.assertEquals(failureQueue.getName(), entityExtractQueueName, "Failure queue should have been set to expected queue.");
+        final ResponseCustomData setCustomData = testDocument_1.getTask().getResponse().getCustomData();
+        Assert.assertTrue(setCustomData.get(entityExtractOpModeKey) != null,
                 "Custom data should have the entity extract operation mode key.");
         final String setOpModeValue = (String) setCustomData.get(entityExtractOpModeKey);
         Assert.assertEquals(setOpModeValue, entityExtractOpModeValue,
                 "Entity Extract Op mode value on returned custom data should have been set to expected value.");
-        Assert.assertTrue(setCustomData.containsKey(entityExtractGrammarMapKey),
+        Assert.assertTrue(setCustomData.get(entityExtractGrammarMapKey) != null,
                 "Custom data should have the entity extract grammar map key.");
         final String setGrammarMapValue = (String) setCustomData.get(entityExtractGrammarMapKey);
         Assert.assertEquals(setGrammarMapValue, enityExtractGrammarMapValue,
@@ -655,7 +661,7 @@ public class WorkflowJavaScriptExecutionTest {
 
         // expecting action on first enabled rule to be marked for execution
         checkActionIdToExecute(document, "10");
-        final Map<String, String> returnedCustomData = document.getTask().getResponse().getCustomData();
+        final ResponseCustomData returnedCustomData = document.getTask().getResponse().getCustomData();
 
         // check that the simple string property has been set
         final String simpleProperty = returnedCustomData.get("another_prop");
@@ -744,7 +750,7 @@ public class WorkflowJavaScriptExecutionTest {
         final Invocable invocable = getInvocableWorkflowJavaScriptFromFullWorkflow(workflow, apiClient);
         invocable.invokeFunction("processDocument", testDocument_1);
         checkActionIdToExecute(testDocument_1, Long.toString(testAction.getActionId()));
-        final Map<String, String> returnedCustomData = testDocument_1.getTask().getResponse().getCustomData();
+        final ResponseCustomData returnedCustomData = testDocument_1.getTask().getResponse().getCustomData();
 
         final String returnedTestPropertyValue = returnedCustomData.get(testPropertyKey);
         Assert.assertEquals(returnedTestPropertyValue, TENANT_ID,
@@ -770,7 +776,7 @@ public class WorkflowJavaScriptExecutionTest {
 
         // expecting action on first enabled rule to be marked for execution
         checkActionIdToExecute(document, "10");
-        final Map<String, String> returnedCustomData = document.getTask().getResponse().getCustomData();
+        final ResponseCustomData returnedCustomData = document.getTask().getResponse().getCustomData();
 
         // check that the simple string property has been set
         final String simpleProperty = returnedCustomData.get("another_prop");
@@ -887,7 +893,7 @@ public class WorkflowJavaScriptExecutionTest {
                 .build();
         invocable.invokeFunction("processDocument", document);
 
-        final Map<String, String> returnedCustomData = document.getTask().getResponse().getCustomData();
+        final ResponseCustomData returnedCustomData = document.getTask().getResponse().getCustomData();
         Assert.assertTrue(returnedCustomData.get(key).equals(value), 
                           "Value should match the value supplied to the mock api client.");
     }
@@ -969,8 +975,7 @@ public class WorkflowJavaScriptExecutionTest {
         checkRulesCompleted(document, Arrays.asList("1", "2"));
     }
 
-    @Test(description = "Test that custom data is correctly set from each action to execute, including that the set " +
-            "custom data can be serialized.")
+    @Test(description = "Test that custom data is correctly set from each action to execute")
     public void handleCustomData() throws WorkerException, ScriptException, NoSuchMethodException,
             WorkflowTransformerException, IOException, URISyntaxException, CodecException, DataStoreException, ApiException {
         final ApiClient apiClient = getMockTenantApiClient(null, null);
@@ -987,32 +992,21 @@ public class WorkflowJavaScriptExecutionTest {
 
         checkActionIdToExecute(document, "1");
 
-        // check that custom data that was set can be serialized (Nashorn ScriptObjectMirror will fail to serialize
-        // if it ends up in custom data)
-        final Codec codec = new JsonCodec();
-        byte[] serializedCustomData = codec.serialise(document.getTask().getResponse().getCustomData());
-        Assert.assertNotNull(serializedCustomData, "Custom data from first call should have been serialized.");
-
         // invoke again which should cause next action to be marked for execution
         invocable.invokeFunction("processDocument", document);
 
         checkActionIdToExecute(document, "2");
         checkActionsCompleted(document, Arrays.asList("1"));
-        serializedCustomData = codec.serialise(document.getTask().getResponse().getCustomData());
-        Assert.assertNotNull(serializedCustomData, "Custom data from second call should have been serialized.");
 
         // invoke again to start final rule and verify all completed actions and rules are persisted
         invocable.invokeFunction("processDocument", document);
 
         checkActionIdToExecute(document, "3");
         checkActionsCompleted(document, Arrays.asList("1", "2"));
-        serializedCustomData = codec.serialise(document.getTask().getResponse().getCustomData());
-        Assert.assertNotNull(serializedCustomData, "Custom data from third call should have been serialized.");
-        final HashMap deserializedCustomData = codec.deserialise(serializedCustomData, HashMap.class);
-        Assert.assertNotNull(deserializedCustomData, "Deserialized custom data should not be null.");
-        final Object grammarMapReturnedObj = deserializedCustomData.get("GRAMMAR_MAP");
-        Assert.assertEquals((String) grammarMapReturnedObj, "{pii.xml: []}",
-                "Grammar map set on deserialized custom data from response options should have expected value.");
+
+        final String grammarMapReturned = document.getTask().getResponse().getCustomData().get("GRAMMAR_MAP");
+        Assert.assertEquals(grammarMapReturned, "{pii.xml: []}",
+                            "Grammar map set on custom data from response options should have expected value.");
     }
 
     @Test(description = "Verify that if the onError function is called that the next action to perform on the document is " +
