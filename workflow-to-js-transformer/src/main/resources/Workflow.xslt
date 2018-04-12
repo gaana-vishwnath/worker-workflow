@@ -326,7 +326,7 @@ function evaluateActionDetails(document, actionDetails) {
     // Add any scripts specified on the action
     if (actionDetails.scripts.length != 0) {
         for each(var scriptToAdd in actionDetails.scripts) {
-            var scriptObjectAdded = document.getTask().getScripts().add()
+            var scriptObjectAdded = document.getTask().getScripts().add();
             scriptObjectAdded.setName(scriptToAdd.name);
 
             if (scriptToAdd.script !== undefined) {
