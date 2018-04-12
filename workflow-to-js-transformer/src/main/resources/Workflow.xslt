@@ -12,6 +12,8 @@
 // Workflow ID: <xsl:value-of select="details/id"/>
 // Workflow Name: <xsl:value-of select="details/name"/>
 
+/* global Java, java */
+
 var System = Java.type("java.lang.System");
 var URL = Java.type("java.net.URL");
 var ByteArray = Java.type("byte[]");
