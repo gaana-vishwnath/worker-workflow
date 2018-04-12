@@ -17,6 +17,7 @@ package com.github.cafdataprocessing;
 
 import com.hpe.caf.worker.document.model.Document;
 import com.hpe.caf.worker.document.model.Script;
+import com.hpe.caf.worker.document.model.Scripts;
 import javax.script.ScriptException;
 
 /**
@@ -41,49 +42,18 @@ final class WorkflowProcessingScripts
     public static void setScripts(final Document document, final String workflowAsJavaScript, final String workflowStorageRef)
         throws ScriptException
     {
+        final Scripts scripts = document.getTask().getScripts();
+
         // Add temporary script to the task using the setScriptInline setter.
-        setWorkflowProcessingScripts(document, workflowAsJavaScript, ScriptType.InlineScript, "temp-workflow.js");
+        final Script tempWorkflowScript = scripts.add();
+        tempWorkflowScript.setName("temp-workflow.js");
+        tempWorkflowScript.setScriptInline(workflowAsJavaScript);
+        tempWorkflowScript.load();
+        tempWorkflowScript.uninstall();
+
         // Add persistant script to the task using the setScriptByReference setter.
-        setWorkflowProcessingScripts(document, workflowStorageRef, ScriptType.StorageReference, "workflow.js");
+        final Script workflowScript = scripts.add();
+        workflowScript.setName("workflow.js");
+        workflowScript.setScriptByReference(workflowStorageRef);
     }
-
-    /**
-     * Sets a script on the task using two different methods, referencing the script by its storage reference and adding the script using
-     * an inline setter.
-     *
-     * @param document Document to set post processing information on.
-     * @param script The script to add to task, this can either be a string representation of the script or a storage reference for the
-     * script in the datastore.
-     * @param scriptType The type of add that should be performed when adding the script to the task.
-     * @param scriptName The name to give the script when adding it to the task.
-     * @throws ScriptException if there is a failure in workflow script loading.
-     */
-    private static void setWorkflowProcessingScripts(final Document document, final String script, final ScriptType scriptType,
-                                                     final String scriptName) throws ScriptException
-    {
-        final Script scriptToAdd = document.getTask().getScripts().add();
-        scriptToAdd.setName(scriptName);
-        switch (scriptType) {
-            case StorageReference: {
-                scriptToAdd.setScriptByReference(script);
-                break;
-            }
-            case InlineScript: {
-                scriptToAdd.setScriptInline(script);
-                scriptToAdd.load();
-                scriptToAdd.uninstall();
-                break;
-            }
-            default: {
-                throw new ScriptException("No valid script type passed.");
-            }
-        }
-    }
-
-}
-
-enum ScriptType
-{
-    StorageReference,
-    InlineScript
 }
