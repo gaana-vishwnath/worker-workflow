@@ -20,13 +20,14 @@ import com.thoughtworks.xstream.converters.enums.EnumConverter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 /**
- * An EnumConverter implementation that uses string representation of enum value when marshalling elements.
- * When active this converter will be applied to all enums.
+ * An EnumConverter implementation that uses string representation of enum value when marshalling elements. When active this converter
+ * will be applied to all enums.
  */
 public class GeneralEnumToStringConverter extends EnumConverter
 {
     @Override
-    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context) {
+    public void marshal(Object source, HierarchicalStreamWriter writer, MarshallingContext context)
+    {
         writer.setValue(((Enum) source).toString());
     }
 }

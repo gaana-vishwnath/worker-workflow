@@ -24,25 +24,27 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * An extension to the XStream NamedMapConverter that allows specifying that a key should be used for the generated
- * element name with its value as the content of the element.
+ * An extension to the XStream NamedMapConverter that allows specifying that a key should be used for the generated element name with its
+ * value as the content of the element.
  */
 public class KeyAsElementNameMapConverter extends NamedMapConverter
 {
     private final Class valueType;
 
-    public KeyAsElementNameMapConverter(Mapper mapper, String valueName, Class valueType) {
+    public KeyAsElementNameMapConverter(Mapper mapper, String valueName, Class valueType)
+    {
         super(mapper, null, "name", String.class, valueName, valueType);
         this.valueType = valueType;
     }
 
     @Override
     public void marshal(Object source, HierarchicalStreamWriter writer,
-                        MarshallingContext context) {
-        final Map map = (Map)source;
+                        MarshallingContext context)
+    {
+        final Map map = (Map) source;
 
         for (Iterator iterator = map.entrySet().iterator(); iterator.hasNext();) {
-            Map.Entry entry = (Map.Entry)iterator.next();
+            Map.Entry entry = (Map.Entry) iterator.next();
             final Object key = entry.getKey();
             final Object value = entry.getValue();
             writeItem((String) key, valueType, value, context, writer);

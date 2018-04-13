@@ -28,28 +28,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Methods that are available to be called during Workflow XSLT transformation. These are intended to provide some useful
- * operations at transformation time.
+ * Methods that are available to be called during Workflow XSLT transformation. These are intended to provide some useful operations at
+ * transformation time.
  */
-public class TransformerFunctions {
-    
+public class TransformerFunctions
+{
     public static final Logger LOG = LoggerFactory.getLogger(TransformerFunctions.class);
 
     /**
      * Escape characters in the passed value that need to be escaped before being written to JavaScript.
+     *
      * @param valueToEscape value that should have characters escaped
      * @return escaped value
      * @throws NullPointerException if {@code valueToEscape} is null
      */
-    public static String escapeForJavaScript(final String valueToEscape) {
+    public static String escapeForJavaScript(final String valueToEscape)
+    {
         Objects.requireNonNull(valueToEscape);
         return StringEscapeUtils.escapeEcmaScript(valueToEscape);
     }
 
     /**
-     * Checks system environment and system properties for the specified property name returning the value if it is found
-     * or null if it is not. If both value is set for both environment and system property then the system property will
-     * be returned.
+     * Checks system environment and system properties for the specified property name returning the value if it is found or null if it is
+     * not. If both value is set for both environment and system property then the system property will be returned.
+     *
      * @param name Name of property to retrieve value for.
      * @return Value matching the specified property name or null if no matching name is found.
      */
@@ -59,13 +61,13 @@ public class TransformerFunctions {
     }
 
     /**
-     * Returns value for worker queue set in the environment based on provided worker name. Returns null if no match
-     * found in environment.
-     * @param workerName Identifies the worker queue is for. System environment and property values will be checked using
-     *                   this value.
+     * Returns value for worker queue set in the environment based on provided worker name. Returns null if no match found in environment.
+     *
+     * @param workerName Identifies the worker queue is for. System environment and property values will be checked using this value.
      * @return Queue value associated with specified worker name or null if no match found.
      */
-    public static String getWorkerQueueFromEnvironment(final String workerName){
+    public static String getWorkerQueueFromEnvironment(final String workerName)
+    {
         if (workerName == null || workerName.isEmpty()) {
             return null;
         }
@@ -97,8 +99,8 @@ public class TransformerFunctions {
             return escapeForJavaScript(effectiveTenantConfigValue.getValue());
         } catch (final ApiException ex) {
             if (ex.getCode() == 404) {
-                LOG.error("Unable to obtain tenant configuration from processing service for tenant: {} using key: {} as no configuration "
-                    + "could be found match the provided key", tenantId, key);
+                LOG.error("Unable to obtain tenant configuration from processing service for tenant: {} using key: {} as no "
+                    + "configuration could be found match the provided key", tenantId, key);
                 throw ex;
             }
             LOG.error("Unable to obtain tenant configuration from processing service for tenant: {} using key: {}", tenantId, key);

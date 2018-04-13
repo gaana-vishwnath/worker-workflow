@@ -24,20 +24,26 @@ import java.util.Objects;
 /**
  * Represents a Processing Rules and its rule conditions, action condition and actions.
  */
-public class FullProcessingRule {
+public class FullProcessingRule
+{
     private final ExistingProcessingRule details;
     private final List<FullAction> actions;
     private final List<ExistingCondition> conditions;
 
     /**
      * Creates an instance of a FullProcessingRule using the provided processing rule details.
+     *
      * @param processingRule details of processing rule this object should represent. Cannot be null.
      * @param actions full details of actions on this rule. Cannot be null.
      * @param ruleConditions rule conditions set on this rule. Cannot be null.
      * @throws NullPointerException when {@code processingRule}, {@code actions} or {@code ruleConditions} is null.
      */
-    public FullProcessingRule(ExistingProcessingRule processingRule, List<FullAction> actions,
-                              List<ExistingCondition> ruleConditions) throws NullPointerException{
+    public FullProcessingRule(
+        ExistingProcessingRule processingRule,
+        List<FullAction> actions,
+        List<ExistingCondition> ruleConditions
+    ) throws NullPointerException
+    {
         Objects.requireNonNull(processingRule);
         Objects.requireNonNull(actions);
         Objects.requireNonNull(ruleConditions);
@@ -46,19 +52,23 @@ public class FullProcessingRule {
         this.conditions = ruleConditions;
     }
 
-    public List<FullAction> getActions(){
+    public List<FullAction> getActions()
+    {
         return actions;
     }
 
-    public ExistingProcessingRule getProcessingRule(){
+    public ExistingProcessingRule getProcessingRule()
+    {
         return details;
     }
 
-    public long getProcessingRuleId(){
+    public long getProcessingRuleId()
+    {
         return details.getId();
     }
 
-    public List<ExistingCondition> getRuleConditions(){
+    public List<ExistingCondition> getRuleConditions()
+    {
         return conditions;
     }
 }

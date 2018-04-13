@@ -22,17 +22,19 @@ import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 import com.thoughtworks.xstream.mapper.Mapper;
 
 /**
- * Extended version of CollectionConverter that records the type of the collection entries as an attribute 'class'
- * to aid in outputting the XML.
+ * Extended version of CollectionConverter that records the type of the collection entries as an attribute 'class' to aid in outputting
+ * the XML.
  */
 public class TypeAttributeCollectionConverter extends CollectionConverter
 {
-    public TypeAttributeCollectionConverter(Mapper mapper) {
+    public TypeAttributeCollectionConverter(Mapper mapper)
+    {
         super(mapper);
     }
 
     @Override
-    protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer) {
+    protected void writeItem(Object item, MarshallingContext context, HierarchicalStreamWriter writer)
+    {
         if (item == null) {
             final String name = mapper().serializedClass(null);
             ExtendedHierarchicalStreamWriterHelper.startNode(writer, name, Mapper.Null.class);

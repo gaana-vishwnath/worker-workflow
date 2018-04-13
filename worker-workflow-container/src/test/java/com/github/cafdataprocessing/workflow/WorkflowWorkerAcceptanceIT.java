@@ -36,7 +36,7 @@ public class WorkflowWorkerAcceptanceIT extends UseAsTestName_TestBase
     {
         testControllerProvider = new DocumentWorkerTestControllerProvider();
         controller = TestRunnerSingle.getTestController(testControllerProvider,
-                new SystemSettingsProvider().getBooleanSetting("testCaseGeneration", false));
+                                                        new SystemSettingsProvider().getBooleanSetting("testCaseGeneration", false));
         controller.initialise();
     }
 

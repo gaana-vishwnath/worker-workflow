@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- ({
+({
     workerName: "worker-workflow",
     workerVersion: "${project.version}",
     outputQueue: getenv("CAF_WORKER_OUTPUT_QUEUE")

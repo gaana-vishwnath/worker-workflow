@@ -18,14 +18,17 @@ package com.github.cafdataprocessing.workflow.constants;
 /**
  * Constant values relating to the Workflow Worker
  */
-public final class WorkflowWorkerConstants {
-
-    private WorkflowWorkerConstants(){}
+public final class WorkflowWorkerConstants
+{
+    private WorkflowWorkerConstants()
+    {
+    }
 
     /**
      * Key values used for custom data on worker tasks.
      */
-    public static class CustomData {
+    public static class CustomData
+    {
         /**
          * Key for custom data property identifying the data store partial reference to use when storing transformed workflow.
          */
@@ -47,7 +50,8 @@ public final class WorkflowWorkerConstants {
     /**
      * Error codes describing reason for a failure to process documents.
      */
-    public static class ErrorCodes {
+    public static class ErrorCodes
+    {
         public static final String INVALID_CUSTOM_DATA = "WORKFLOW-InvalidCustomData";
         public static final String STORE_WORKFLOW_FAILED = "WORKFLOW-StoreWorkflowFailed";
         public static final String ADD_WORKFLOW_SCRIPTS_FAILED = "WORKFLOW-FailedToAddScriptsToTask";

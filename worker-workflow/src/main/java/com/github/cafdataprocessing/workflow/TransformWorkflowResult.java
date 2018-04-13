@@ -24,21 +24,24 @@ final class TransformWorkflowResult
     private final String workflowStorageRef;
 
     /**
-     * Instantiate a TransformWorkflowResult recording the provided transformed workflow as a string and its storage
-     * reference.
+     * Instantiate a TransformWorkflowResult recording the provided transformed workflow as a string and its storage reference.
+     *
      * @param transformedWorkflow the transformed workflow as a string.
      * @param workflowStorageRef storage reference to the transformed workflow in the data store.
      */
-    public TransformWorkflowResult(final String transformedWorkflow, final String workflowStorageRef) {
+    public TransformWorkflowResult(final String transformedWorkflow, final String workflowStorageRef)
+    {
         this.transformedWorkflow = transformedWorkflow;
         this.workflowStorageRef = workflowStorageRef;
     }
 
-    public String getTransformedWorkflow() {
+    public String getTransformedWorkflow()
+    {
         return transformedWorkflow;
     }
 
-    public String getWorkflowStorageRef() {
+    public String getWorkflowStorageRef()
+    {
         return workflowStorageRef;
     }
 }

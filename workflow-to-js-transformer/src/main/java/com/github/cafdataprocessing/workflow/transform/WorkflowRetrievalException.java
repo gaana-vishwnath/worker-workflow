@@ -16,10 +16,11 @@
 package com.github.cafdataprocessing.workflow.transform;
 
 /**
- * Exception class for when general exceptions occur during retrieval of workflow and its components, indicating an
- * issue with the service called to retrieve the workflow.
+ * Exception class for when general exceptions occur during retrieval of workflow and its components, indicating an issue with the service
+ * called to retrieve the workflow.
  */
-public class WorkflowRetrievalException extends Exception {
+public class WorkflowRetrievalException extends Exception
+{
     public WorkflowRetrievalException(final String message)
     {
         super(message);

@@ -25,21 +25,29 @@ import java.util.List;
 /**
  * Builds workflow objects for use in tests.
  */
-public class WorkflowComponentBuilder {
+public class WorkflowComponentBuilder
+{
     private static long conditionIdCounter = 1;
     private static long actionIdCounter = 1;
     private static long ruleIdCounter = 1;
     private static long workflowIdCounter = 1;
 
-    public FullWorkflow buildFullWorkflow(String name, List<FullProcessingRule> rules){
+    public FullWorkflow buildFullWorkflow(String name, List<FullProcessingRule> rules)
+    {
         ExistingWorkflow workflow = new ExistingWorkflow();
         workflow.setId(workflowIdCounter++);
         workflow.setName(name);
         return new FullWorkflow(workflow, rules);
     }
 
-    public FullProcessingRule buildFullProcessingRule(String name, boolean enabled, int priority,
-                                                       List<FullAction> actions, List<ExistingCondition> ruleConditions){
+    public FullProcessingRule buildFullProcessingRule(
+        String name,
+        boolean enabled,
+        int priority,
+        List<FullAction> actions,
+        List<ExistingCondition> ruleConditions
+    )
+    {
         ExistingProcessingRule rule = new ExistingProcessingRule();
         rule.setId(ruleIdCounter++);
         rule.setName(name);
@@ -48,7 +56,8 @@ public class WorkflowComponentBuilder {
         return new FullProcessingRule(rule, actions, ruleConditions);
     }
 
-    public FullAction buildFullAction(String name, List<ExistingCondition> conditions, int order, Object settings){
+    public FullAction buildFullAction(String name, List<ExistingCondition> conditions, int order, Object settings)
+    {
         ExistingAction action = new ExistingAction();
         action.setId(actionIdCounter++);
         action.setName(name);
@@ -59,8 +68,14 @@ public class WorkflowComponentBuilder {
         return new FullAction(action, conditions);
     }
 
-    public FullAction buildFullAction(String name, List<ExistingCondition> conditions, int order, Object settings,
-                                      String typeInternalName){
+    public FullAction buildFullAction(
+        String name,
+        List<ExistingCondition> conditions,
+        int order,
+        Object settings,
+        String typeInternalName
+    )
+    {
         ExistingAction action = new ExistingAction();
         action.setId(actionIdCounter++);
         action.setName(name);
@@ -71,9 +86,14 @@ public class WorkflowComponentBuilder {
         return new FullAction(action, conditions);
     }
 
-    public ExistingCondition buildStringCondition(String name, String field, String value,
-                                                   int order,
-                                                   StringConditionAdditional.OperatorEnum operator){
+    public ExistingCondition buildStringCondition(
+        String name,
+        String field,
+        String value,
+        int order,
+        StringConditionAdditional.OperatorEnum operator
+    )
+    {
         ExistingCondition condition = new ExistingCondition();
         condition.setId(conditionIdCounter++);
         condition.setName(name);
@@ -87,9 +107,13 @@ public class WorkflowComponentBuilder {
         return condition;
     }
 
-    public ExistingCondition buildBooleanCondition(String name, int order,
-                                                    BooleanConditionAdditional.OperatorEnum operator,
-                                                    List<Condition> children){
+    public ExistingCondition buildBooleanCondition(
+        String name,
+        int order,
+        BooleanConditionAdditional.OperatorEnum operator,
+        List<Condition> children
+    )
+    {
         ExistingCondition condition = new ExistingCondition();
         condition.setId(conditionIdCounter++);
         condition.setName(name);

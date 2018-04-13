@@ -16,10 +16,11 @@
 package com.github.cafdataprocessing.workflow.transform;
 
 /**
- * Exception class for general exceptions that occur during Workflow transformation where the potential action by the caller
- * to rectify exception is limited.
+ * Exception class for general exceptions that occur during Workflow transformation where the potential action by the caller to rectify
+ * exception is limited.
  */
-public class WorkflowTransformerException extends Exception {
+public class WorkflowTransformerException extends Exception
+{
     public WorkflowTransformerException(final String message)
     {
         super(message);

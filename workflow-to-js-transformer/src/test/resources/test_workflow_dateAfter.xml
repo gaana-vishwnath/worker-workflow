@@ -48,16 +48,16 @@
                         <order>100</order>
                     </details>
                     <conditions>
-                    <condition class="condition">
-                        <name>DateConditionAfter</name>
-                        <additional class="linked-hash-map">
-                            <order class="int">200</order>
-                            <notes class="null"/>
-                            <type>date</type>
-                            <operator>after</operator>
-                        </additional>
-                        <id>92</id>
-                    </condition>
+                        <condition class="condition">
+                            <name>DateConditionAfter</name>
+                            <additional class="linked-hash-map">
+                                <order class="int">200</order>
+                                <notes class="null"/>
+                                <type>date</type>
+                                <operator>after</operator>
+                            </additional>
+                            <id>92</id>
+                        </condition>
                     </conditions>
                 </action>
             </actions>

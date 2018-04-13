@@ -22,29 +22,35 @@ import javax.validation.constraints.NotNull;
  * Configuration specific to the workflow worker
  */
 @Configuration
-public final class WorkflowWorkerConfiguration {
+public final class WorkflowWorkerConfiguration
+{
     /**
      * URL to a processing API that workflows should be retrieved via.
      */
     @NotNull
     private String processingApiUrl;
     /**
-     * The time that cached workflows should be retained after being added to the cache. Should be in ISO-8601 time
-     * duration format.
+     * The time that cached workflows should be retained after being added to the cache. Should be in ISO-8601 time duration format.
      */
     private String workflowCachePeriod;
 
-    public String getProcessingApiUrl() {
+    public String getProcessingApiUrl()
+    {
         return processingApiUrl;
     }
 
-    public String getWorkflowCachePeriod() {
+    public String getWorkflowCachePeriod()
+    {
         return workflowCachePeriod;
     }
 
-    public void setProcessingApiUrl(final String processingApiUrl) {
+    public void setProcessingApiUrl(final String processingApiUrl)
+    {
         this.processingApiUrl = processingApiUrl;
     }
 
-    public void setWorkflowCachePeriod(final String workflowCachePeriod) { this.workflowCachePeriod = workflowCachePeriod; }
+    public void setWorkflowCachePeriod(final String workflowCachePeriod)
+    {
+        this.workflowCachePeriod = workflowCachePeriod;
+    }
 }

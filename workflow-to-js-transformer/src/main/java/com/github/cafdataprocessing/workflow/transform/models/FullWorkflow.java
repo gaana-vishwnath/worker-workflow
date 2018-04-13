@@ -23,36 +23,43 @@ import java.util.Objects;
 /**
  * Represents a Workflow and its children such as Processing Rules, conditions and Actions.
  */
-public class FullWorkflow {
+public class FullWorkflow
+{
     private final ExistingWorkflow details;
     private final List<FullProcessingRule> processingRules;
 
     /**
      * Creates an instance of a FullWorkflow using the provided workflow details.
+     *
      * @param workflow details of workflow this object represents. Cannot be null.
      * @param processingRules full details of processing rules on this workflow. Cannot be null.
      * @throws NullPointerException when {@code workflow} or {@code processingRules} is null.
      */
-    public FullWorkflow(ExistingWorkflow workflow, List<FullProcessingRule> processingRules) throws NullPointerException {
+    public FullWorkflow(ExistingWorkflow workflow, List<FullProcessingRule> processingRules) throws NullPointerException
+    {
         Objects.requireNonNull(workflow);
         Objects.requireNonNull(processingRules);
         this.details = workflow;
         this.processingRules = processingRules;
     }
 
-    public ExistingWorkflow getDetails(){
+    public ExistingWorkflow getDetails()
+    {
         return details;
     }
 
-    public List<FullProcessingRule> getProcessingRules(){
+    public List<FullProcessingRule> getProcessingRules()
+    {
         return processingRules;
     }
 
     /**
      * Returns the ID of the workflow.
+     *
      * @return ID of the workflow.
      */
-    public Long getWorkflowId(){
+    public Long getWorkflowId()
+    {
         return details.getId();
     }
 }

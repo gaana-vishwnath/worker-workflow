@@ -27,7 +27,9 @@ final class CustomDataExtractor
 {
     private final static Logger LOG = LoggerFactory.getLogger(CustomDataExtractor.class);
 
-    private CustomDataExtractor(){}
+    private CustomDataExtractor()
+    {
+    }
 
     /**
      * Retrieves Workflow Worker specific properties from custom data of document. If any required properties are not present then a
@@ -46,39 +48,37 @@ final class CustomDataExtractor
         boolean customDataValid = true;
 
         outputPartialReference = CustomDataExtractor.getOutputPartialReference(document);
-        if(outputPartialReference==null || outputPartialReference.isEmpty()) {
+        if (outputPartialReference == null || outputPartialReference.isEmpty()) {
             LOG.debug("No output partial reference value passed to worker in custom data.");
         }
 
         projectId = CustomDataExtractor.getProjectId(document);
-        if(projectId==null || projectId.isEmpty()) {
+        if (projectId == null || projectId.isEmpty()) {
             LOG.error("No project ID value passed to worker in custom data.");
             document.addFailure(WorkflowWorkerConstants.ErrorCodes.INVALID_CUSTOM_DATA,
-                    "No project ID value passed to worker in custom data.");
+                                "No project ID value passed to worker in custom data.");
             customDataValid = false;
         }
 
         tenantId = CustomDataExtractor.getTenantId(document);
-        if(tenantId==null || tenantId.isEmpty()) {
+        if (tenantId == null || tenantId.isEmpty()) {
             LOG.error("No tenant ID value passed to worker in custom data.");
             document.addFailure(WorkflowWorkerConstants.ErrorCodes.INVALID_CUSTOM_DATA,
-                    "No tenant ID value passed to worker in custom data.");
+                                "No tenant ID value passed to worker in custom data.");
             customDataValid = false;
         }
 
         try {
             final Long extractedWorkflowId = CustomDataExtractor.getWorkflowId(document);
-            if(extractedWorkflowId==null) {
+            if (extractedWorkflowId == null) {
                 LOG.error("No workflow ID value passed to worker in custom data.");
                 document.addFailure(WorkflowWorkerConstants.ErrorCodes.INVALID_CUSTOM_DATA,
-                        "No workflow ID value passed to worker in custom data.");
+                                    "No workflow ID value passed to worker in custom data.");
                 customDataValid = false;
-            }
-            else {
+            } else {
                 workflowId = extractedWorkflowId;
             }
-        }
-        catch(final NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             LOG.error("Failed to read passed workflow ID as a number.", e);
             document.addFailure(WorkflowWorkerConstants.ErrorCodes.INVALID_CUSTOM_DATA, e.getMessage());
             customDataValid = false;
@@ -93,40 +93,48 @@ final class CustomDataExtractor
 
     /**
      * Gets the output partial reference property from provided document.
+     *
      * @param document document to examine for property.
      * @return the output partial reference property or null if it is not present.
      */
-    private static String getOutputPartialReference(final Document document) {
+    private static String getOutputPartialReference(final Document document)
+    {
         return document.getCustomData(WorkflowWorkerConstants.CustomData.OUTPUT_PARTIAL_REFERENCE);
     }
 
     /**
      * Gets the project ID property from provided document.
+     *
      * @param document document to examine for property.
      * @return the project ID property or null if it is not present.
      */
-    private static String getProjectId(final Document document) {
+    private static String getProjectId(final Document document)
+    {
         return document.getCustomData(WorkflowWorkerConstants.CustomData.PROJECT_ID);
     }
 
     /**
      * Gets the tenant ID property from provided document.
+     *
      * @param document document to examine for property.
      * @return the tenant ID property or null if it is not present.
      */
-    private static String getTenantId(final Document document) {
+    private static String getTenantId(final Document document)
+    {
         return document.getCustomData(WorkflowWorkerConstants.CustomData.TENANT_ID);
     }
 
     /**
      * Gets the workflow ID property from provided document.
+     *
      * @param document document to examine for property.
      * @return the workflow ID property or null if it is not present.
      * @throws NumberFormatException if the workflow ID property on the document is not a valid long.
      */
-    private static Long getWorkflowId(final Document document) throws NumberFormatException {
+    private static Long getWorkflowId(final Document document) throws NumberFormatException
+    {
         final String workflowIdStr = document.getCustomData(WorkflowWorkerConstants.CustomData.WORKFLOW_ID);
-        if(workflowIdStr == null  || workflowIdStr.isEmpty()) {
+        if (workflowIdStr == null || workflowIdStr.isEmpty()) {
             return null;
         }
         return Long.parseLong(workflowIdStr);

@@ -24,32 +24,38 @@ import java.util.Objects;
 /**
  * Represents a processing service action and its action conditions
  */
-public class FullAction {
+public class FullAction
+{
     private final ExistingAction details;
     private final List<ExistingCondition> conditions;
 
     /**
      * Creates an instance of a FullAction using the provided action details.
+     *
      * @param action details of action this object should represent. Cannot be null.
      * @param actionConditions conditions that apply to the action. Cannot be null.
      * @throws NullPointerException when {@code action} or {@code actionConditions} is null.
      */
-    public FullAction(ExistingAction action, List<ExistingCondition> actionConditions){
+    public FullAction(ExistingAction action, List<ExistingCondition> actionConditions)
+    {
         Objects.requireNonNull(action);
         Objects.requireNonNull(actionConditions);
         this.details = action;
         this.conditions = actionConditions;
     }
 
-    public ExistingAction getAction(){
+    public ExistingAction getAction()
+    {
         return details;
     }
 
-    public List<ExistingCondition> getActionConditions(){
+    public List<ExistingCondition> getActionConditions()
+    {
         return conditions;
     }
 
-    public long getActionId(){
+    public long getActionId()
+    {
         return details.getId();
     }
 }

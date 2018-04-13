@@ -26,7 +26,8 @@ import com.github.cafdataprocessing.processing.service.client.api.WorkflowsApi;
 /**
  * Wrapper class allowing easy passing of multiple instantiated processing API classes
  */
-public class ProcessingApisProvider {
+public class ProcessingApisProvider
+{
     private final WorkflowsApi workflowsApi;
     private final ProcessingRulesApi processingRulesApi;
     private final ActionsApi actionsApi;
@@ -34,7 +35,8 @@ public class ProcessingApisProvider {
     private final ActionConditionsApi actionConditionsApi;
     private final ProcessingRulesConditionsApi rulesConditionsApi;
 
-    public ProcessingApisProvider(final ApiClient apiClient){
+    public ProcessingApisProvider(final ApiClient apiClient)
+    {
         workflowsApi = new WorkflowsApi(apiClient);
         processingRulesApi = new ProcessingRulesApi(apiClient);
         actionsApi = new ActionsApi(apiClient);
@@ -43,27 +45,33 @@ public class ProcessingApisProvider {
         rulesConditionsApi = new ProcessingRulesConditionsApi(apiClient);
     }
 
-    public ActionsApi getActionsApi() {
+    public ActionsApi getActionsApi()
+    {
         return actionsApi;
     }
 
-    public ActionConditionsApi getActionConditionsApi() {
+    public ActionConditionsApi getActionConditionsApi()
+    {
         return actionConditionsApi;
     }
 
-    public ActionTypesApi getActionTypesApi() {
+    public ActionTypesApi getActionTypesApi()
+    {
         return actionTypesApi;
     }
 
-    public ProcessingRulesApi getProcessingRulesApi() {
+    public ProcessingRulesApi getProcessingRulesApi()
+    {
         return processingRulesApi;
     }
 
-    public ProcessingRulesConditionsApi getRulesConditionsApi() {
+    public ProcessingRulesConditionsApi getRulesConditionsApi()
+    {
         return rulesConditionsApi;
     }
 
-    public WorkflowsApi getWorkflowsApi() {
+    public WorkflowsApi getWorkflowsApi()
+    {
         return workflowsApi;
     }
 }

@@ -22,9 +22,11 @@ import com.hpe.caf.worker.document.model.Application;
 /**
  * A factory to create workflow workers, passing them a configuration instance.
  */
-public final class WorkflowWorkerFactory implements DocumentWorkerFactory {
+public final class WorkflowWorkerFactory implements DocumentWorkerFactory
+{
     @Override
-    public DocumentWorker createDocumentWorker(final Application application) {
+    public DocumentWorker createDocumentWorker(final Application application)
+    {
         return new WorkflowWorker(application);
     }
 }

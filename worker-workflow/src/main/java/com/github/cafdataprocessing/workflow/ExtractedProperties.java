@@ -27,6 +27,7 @@ final class ExtractedProperties
 
     /**
      * Initialize ExtractedProperties instance describing properties pulled from a document.
+     *
      * @param valid indicates if all the properties this instance contains are valid for use.
      * @param outputPartialReference the output partial reference to use for data storage.
      * @param projectId the project ID workflow is associated with.
@@ -34,24 +35,31 @@ final class ExtractedProperties
      * @param workflowId the workflow ID to retrieve for the document.
      */
     public ExtractedProperties(final String outputPartialReference, final String projectId,
-                               final String tenantId, final long workflowId) {
+                               final String tenantId, final long workflowId)
+    {
         this.outputPartialReference = outputPartialReference;
         this.projectId = projectId;
         this.tenantId = tenantId;
         this.workflowId = workflowId;
     }
 
-    public String getOutputPartialReference() {
+    public String getOutputPartialReference()
+    {
         return outputPartialReference;
     }
 
-    public String getProjectId() {
+    public String getProjectId()
+    {
         return projectId;
     }
 
-    public String getTenantId() { return tenantId; }
+    public String getTenantId()
+    {
+        return tenantId;
+    }
 
-    public long getWorkflowId() {
+    public long getWorkflowId()
+    {
         return workflowId;
     }
 }
