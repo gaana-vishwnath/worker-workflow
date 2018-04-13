@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cafdataprocessing;
+package com.github.cafdataprocessing.workflow;
 
 import com.github.cafdataprocessing.processing.service.client.ApiException;
 import com.github.cafdataprocessing.workflow.transform.WorkflowRetrievalException;
