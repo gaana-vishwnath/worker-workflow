@@ -16,12 +16,10 @@
 package com.github.cafdataprocessing.workflow;
 
 /**
- * Represents workflow worker properties extracted from custom data of a document, including whether the properties are
- * valid.
+ * Represents workflow worker properties extracted from custom data of a document.
  */
 final class ExtractedProperties
 {
-    private final boolean valid;
     private final String outputPartialReference;
     private final String projectId;
     private final String tenantId;
@@ -35,9 +33,8 @@ final class ExtractedProperties
      * @param tenantId a tenant ID to use in evaluating the workflow.
      * @param workflowId the workflow ID to retrieve for the document.
      */
-    public ExtractedProperties(final boolean valid, final String outputPartialReference, final String projectId,
+    public ExtractedProperties(final String outputPartialReference, final String projectId,
                                final String tenantId, final long workflowId) {
-        this.valid = valid;
         this.outputPartialReference = outputPartialReference;
         this.projectId = projectId;
         this.tenantId = tenantId;
@@ -56,13 +53,5 @@ final class ExtractedProperties
 
     public long getWorkflowId() {
         return workflowId;
-    }
-
-    /**
-     * Indicates if all the properties this instance contains are valid for use.
-     * @return whether all the properties contained in this instance are valid.
-     */
-    public boolean isValid() {
-        return valid;
     }
 }

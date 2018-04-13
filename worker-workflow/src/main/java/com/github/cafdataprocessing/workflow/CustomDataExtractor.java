@@ -30,14 +30,15 @@ final class CustomDataExtractor
     private CustomDataExtractor(){}
 
     /**
-     * Retrieves Workflow Worker specific properties from custom data of document. If any required properties are not
-     * present then a failure will be recorded on the document and the returned result will indicate the properties are
-     * not valid.
+     * Retrieves Workflow Worker specific properties from custom data of document. If any required properties are not present then a
+     * failure will be recorded on the document and an exception will be thrown.
+     *
      * @param document document to retrieve properties from and potentially update with failures if any are missing.
-     * @return the result containing properties extracted from the custom data and an indicator of whether all properties
-     * are valid.
+     * @return the result containing properties extracted from the custom data
      */
-    public static ExtractedProperties extractPropertiesFromCustomData(final Document document) {
+    public static ExtractedProperties extractPropertiesFromCustomData(final Document document)
+        throws InvalidExtractedPropertiesException
+    {
         final String outputPartialReference;
         final String projectId;
         final String tenantId;
@@ -82,7 +83,12 @@ final class CustomDataExtractor
             document.addFailure(WorkflowWorkerConstants.ErrorCodes.INVALID_CUSTOM_DATA, e.getMessage());
             customDataValid = false;
         }
-        return new ExtractedProperties(customDataValid, outputPartialReference, projectId, tenantId, workflowId);
+
+        if (customDataValid) {
+            return new ExtractedProperties(outputPartialReference, projectId, tenantId, workflowId);
+        } else {
+            throw new InvalidExtractedPropertiesException();
+        }
     }
 
     /**

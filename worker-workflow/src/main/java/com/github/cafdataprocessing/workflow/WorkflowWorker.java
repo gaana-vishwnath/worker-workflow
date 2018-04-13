@@ -126,8 +126,10 @@ public final class WorkflowWorker implements DocumentWorker
     public void processDocument(final Document document) throws InterruptedException, DocumentWorkerTransientException
     {
         // Get the worker task properties passed in custom data
-        final ExtractedProperties extractedProperties = CustomDataExtractor.extractPropertiesFromCustomData(document);
-        if(!extractedProperties.isValid()) {
+        final ExtractedProperties extractedProperties;
+        try {
+            extractedProperties = CustomDataExtractor.extractPropertiesFromCustomData(document);
+        } catch (final InvalidExtractedPropertiesException ex) {
             LOG.warn("Custom data on document is not valid for this worker. Processing of this document will not " +
                     "proceed for this worker.");
             return;
