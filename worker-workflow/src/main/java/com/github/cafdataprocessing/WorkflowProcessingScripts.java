@@ -49,11 +49,11 @@ final class WorkflowProcessingScripts
         tempWorkflowScript.setName("temp-workflow.js");
         tempWorkflowScript.setScriptInline(workflowAsJavaScript);
         tempWorkflowScript.load();
-        tempWorkflowScript.uninstall();
 
         // Add persistant script to the task using the setScriptByReference setter.
         final Script workflowScript = scripts.add();
         workflowScript.setName("workflow.js");
         workflowScript.setScriptByReference(workflowStorageRef);
+        workflowScript.install();
     }
 }

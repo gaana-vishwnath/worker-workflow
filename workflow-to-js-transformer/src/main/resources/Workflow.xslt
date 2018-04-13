@@ -12,7 +12,7 @@
 // Workflow ID: <xsl:value-of select="details/id"/>
 // Workflow Name: <xsl:value-of select="details/name"/>
 
-/* global Java, java */
+/* global Java, java, thisScript */
 
 var System = Java.type("java.lang.System");
 var URL = Java.type("java.net.URL");
@@ -22,6 +22,10 @@ var ByteArray = Java.type("byte[]");
 var ACTION_TO_EXECUTE = 'actionToExecute';
 var CONDITIONS_NOT_MET = 'conditionsNotMet';
 var ALREADY_EXECUTED = 'alreadyExecuted';
+
+function onProcessTask() {
+    thisScript.install();
+}
 
 function onAfterProcessTask(eventObj) {
     processDocument(eventObj.rootDocument);

@@ -130,12 +130,12 @@ Customization scripts may be included on an action and will be loaded when the d
 "scripts": [
       {
         "name": "countSuspectedPii.js",
-        "script": "// Count the suspected pii entities\nfunction onAfterProcessDocument(e) {\n  var piiEntityCount = e.document.getField(\"SUSPECTED_PII\").getValues().size();\n  e.document.getField(\"SUSPECTED_PII_ENTITY_COUNT\").set(piiEntityCount);\n}\n\n// Do not pass this script on to the next worker\nthisScript.uninstall();\n"
+        "script": "// Count the suspected pii entities\nfunction onAfterProcessDocument(e) {\n  var piiEntityCount = e.document.getField(\"SUSPECTED_PII\").getValues().size();\n  e.document.getField(\"SUSPECTED_PII_ENTITY_COUNT\").set(piiEntityCount);\n}\n"
       }
     ]
 ```
 
-The above script would be set on the task sent to a worker. Note that this script uninstalls itself so that it is not passed to the next worker for execution. By default a script will continue to be passed and execute in subsequent workers.
+The above script would be set on the task sent to a worker.
 
 ### FieldMapping Action Type
 

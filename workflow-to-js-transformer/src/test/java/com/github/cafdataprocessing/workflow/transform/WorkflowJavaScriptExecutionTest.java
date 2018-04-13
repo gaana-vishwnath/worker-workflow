@@ -327,7 +327,7 @@ public class WorkflowJavaScriptExecutionTest {
         Assert.assertEquals(actualScript.getName(), expectedName, "Expecting the name of script to match expected value.");
         Assert.assertEquals(actualScript.getScript(), expectedValue, "Expecting the script set to match expected script " +
                 "value.");
-        Assert.assertTrue(actualScript.isInstalled(), "Expecting the script to be installed.");
+        Assert.assertFalse(actualScript.isInstalled(), "Expecting the script to not be installed.");
         Assert.assertFalse(actualScript.isLoaded(), "Expecting the script to not be loaded.");
     }
 
