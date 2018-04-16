@@ -23,11 +23,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Given a document this class returns specified properties from the document's custom data.
  */
-final class CustomDataExtractor
+final class WorkflowSpecProvider
 {
-    private final static Logger LOG = LoggerFactory.getLogger(CustomDataExtractor.class);
+    private final static Logger LOG = LoggerFactory.getLogger(WorkflowSpecProvider.class);
 
-    private CustomDataExtractor()
+    private WorkflowSpecProvider()
     {
     }
 
@@ -38,8 +38,8 @@ final class CustomDataExtractor
      * @param document document to retrieve properties from and potentially update with failures if any are missing.
      * @return the result containing properties extracted from the custom data
      */
-    public static TransformedWorkflowCacheKey extractPropertiesFromCustomData(final Document document)
-        throws InvalidExtractedPropertiesException
+    public static WorkflowSpec fromDocument(final Document document)
+        throws InvalidWorkflowSpecException
     {
         final String outputPartialReference;
         final String projectId;
@@ -47,12 +47,12 @@ final class CustomDataExtractor
         long workflowId = -1;
         boolean customDataValid = true;
 
-        outputPartialReference = CustomDataExtractor.getOutputPartialReference(document);
+        outputPartialReference = WorkflowSpecProvider.getOutputPartialReference(document);
         if (outputPartialReference == null || outputPartialReference.isEmpty()) {
             LOG.debug("No output partial reference value passed to worker in custom data.");
         }
 
-        projectId = CustomDataExtractor.getProjectId(document);
+        projectId = WorkflowSpecProvider.getProjectId(document);
         if (projectId == null || projectId.isEmpty()) {
             LOG.error("No project ID value passed to worker in custom data.");
             document.addFailure(WorkflowWorkerConstants.ErrorCodes.INVALID_CUSTOM_DATA,
@@ -60,7 +60,7 @@ final class CustomDataExtractor
             customDataValid = false;
         }
 
-        tenantId = CustomDataExtractor.getTenantId(document);
+        tenantId = WorkflowSpecProvider.getTenantId(document);
         if (tenantId == null || tenantId.isEmpty()) {
             LOG.error("No tenant ID value passed to worker in custom data.");
             document.addFailure(WorkflowWorkerConstants.ErrorCodes.INVALID_CUSTOM_DATA,
@@ -69,7 +69,7 @@ final class CustomDataExtractor
         }
 
         try {
-            final Long extractedWorkflowId = CustomDataExtractor.getWorkflowId(document);
+            final Long extractedWorkflowId = WorkflowSpecProvider.getWorkflowId(document);
             if (extractedWorkflowId == null) {
                 LOG.error("No workflow ID value passed to worker in custom data.");
                 document.addFailure(WorkflowWorkerConstants.ErrorCodes.INVALID_CUSTOM_DATA,
@@ -85,9 +85,9 @@ final class CustomDataExtractor
         }
 
         if (customDataValid) {
-            return new TransformedWorkflowCacheKey(outputPartialReference, projectId, tenantId, workflowId);
+            return new WorkflowSpec(outputPartialReference, projectId, tenantId, workflowId);
         } else {
-            throw new InvalidExtractedPropertiesException();
+            throw new InvalidWorkflowSpecException();
         }
     }
 

@@ -44,7 +44,7 @@ final class TransformedWorkflowCache
 
     private final DataStore dataStore;
     private final String processingApiUrl;
-    private final LoadingCache<TransformedWorkflowCacheKey, TransformWorkflowResult> workflowCache;
+    private final LoadingCache<WorkflowSpec, TransformWorkflowResult> workflowCache;
 
     /**
      * Initialize a TransformedWorkflowCache instance with each entry set to expire after the provided duration.
@@ -68,10 +68,10 @@ final class TransformedWorkflowCache
         this.processingApiUrl = processingApiUrl;
         workflowCache = CacheBuilder.newBuilder()
             .expireAfterWrite(workflowCachePeriod.get(ChronoUnit.SECONDS), TimeUnit.SECONDS)
-            .build(new CacheLoader<TransformedWorkflowCacheKey, TransformWorkflowResult>()
+            .build(new CacheLoader<WorkflowSpec, TransformWorkflowResult>()
             {
                 @Override
-                public TransformWorkflowResult load(final TransformedWorkflowCacheKey key)
+                public TransformWorkflowResult load(final WorkflowSpec key)
                     throws ApiException, DataStoreException, WorkflowRetrievalException,
                            WorkflowTransformerException
                 {
@@ -100,11 +100,11 @@ final class TransformedWorkflowCache
      * @throws WorkflowTransformerException if a failure occurs during transformation of workflow during load.
      */
     public TransformWorkflowResult getTransformWorkflowResult(
-        final TransformedWorkflowCacheKey cacheKey
+        final WorkflowSpec workflowSpec
     ) throws ApiException, DataStoreException, WorkflowRetrievalException, WorkflowTransformerException
     {
         try {
-            return workflowCache.get(cacheKey);
+            return workflowCache.get(workflowSpec);
         } catch (final ExecutionException e) {
             // throw specific exception types that caused ExecutionException if they are known to be thrown during cache
             // load
@@ -153,7 +153,7 @@ final class TransformedWorkflowCache
      * e.g. The processing service not being contactable.
      */
     private TransformWorkflowResult transformWorkflow(
-        final TransformedWorkflowCacheKey cacheKey
+        final WorkflowSpec cacheKey
     ) throws ApiException, DataStoreException, WorkflowRetrievalException, WorkflowTransformerException
     {
         final String workflowJavaScript;

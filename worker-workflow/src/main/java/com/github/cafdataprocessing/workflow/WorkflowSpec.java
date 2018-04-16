@@ -18,9 +18,9 @@ package com.github.cafdataprocessing.workflow;
 import java.util.Objects;
 
 /**
- * Represents a key to a transformed workflow cache entry
+ * Represents the properties that define a specific workflow
  */
-final class TransformedWorkflowCacheKey
+final class WorkflowSpec
 {
     private final String outputPartialReference;
     private final String projectId;
@@ -28,14 +28,14 @@ final class TransformedWorkflowCacheKey
     private final long workflowId;
 
     /**
-     * Create a transformed workflow cache key using the partial storage reference, project ID and workflow ID provided.
+     * Create the workflow specification object using the partial storage reference, project ID and workflow ID provided.
      *
      * @param outputPartialReference partial storage reference for the transformed workflow this key is to be associated with.
      * @param projectId project ID of the transformed workflow this key is to be associated with.
      * @param tenantId a tenant ID to use in evaluating the workflow.
      * @param workflowId workflow ID of the transformed workflow this key is to be associated with.
      */
-    public TransformedWorkflowCacheKey(
+    public WorkflowSpec(
         final String outputPartialReference,
         final String projectId,
         final String tenantId,
@@ -75,11 +75,11 @@ final class TransformedWorkflowCacheKey
             return true;
         }
 
-        if (!(o instanceof TransformedWorkflowCacheKey)) {
+        if (!(o instanceof WorkflowSpec)) {
             return false;
         }
 
-        final TransformedWorkflowCacheKey cacheKeyToCheck = (TransformedWorkflowCacheKey) o;
+        final WorkflowSpec cacheKeyToCheck = (WorkflowSpec) o;
         return Objects.equals(this.outputPartialReference, cacheKeyToCheck.getOutputPartialReference())
             && Objects.equals(this.projectId, cacheKeyToCheck.getProjectId())
             && Objects.equals(this.tenantId, cacheKeyToCheck.getTenantId())

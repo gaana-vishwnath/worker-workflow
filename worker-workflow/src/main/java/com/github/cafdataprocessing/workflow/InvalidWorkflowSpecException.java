@@ -15,9 +15,9 @@
  */
 package com.github.cafdataprocessing.workflow;
 
-final class InvalidExtractedPropertiesException extends Exception
+final class InvalidWorkflowSpecException extends Exception
 {
-    public InvalidExtractedPropertiesException()
+    public InvalidWorkflowSpecException()
     {
     }
 }
