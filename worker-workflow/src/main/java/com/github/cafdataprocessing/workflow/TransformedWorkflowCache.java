@@ -100,14 +100,9 @@ final class TransformedWorkflowCache
      * @throws WorkflowTransformerException if a failure occurs during transformation of workflow during load.
      */
     public TransformWorkflowResult getTransformWorkflowResult(
-        final long workflowId,
-        final String projectId,
-        final String outputPartialReference,
-        final String tenantId
+        final TransformedWorkflowCacheKey cacheKey
     ) throws ApiException, DataStoreException, WorkflowRetrievalException, WorkflowTransformerException
     {
-        final TransformedWorkflowCacheKey cacheKey
-            = buildCacheKey(workflowId, projectId, outputPartialReference, tenantId);
         try {
             return workflowCache.get(cacheKey);
         } catch (final ExecutionException e) {
@@ -128,24 +123,6 @@ final class TransformedWorkflowCache
             }
             throw new RuntimeException(e);
         }
-    }
-
-    /**
-     * Builds a cache key from the provided workflow ID, project ID and partial storage reference.
-     *
-     * @param workflowId workflow ID to use in cache key construction.
-     * @param projectId project ID to use in cache key construction.
-     * @param outputPartialReference partial reference to use in cache key construction.
-     * @param tenantId a tenant ID to use in evaluating the workflow.
-     * @return constructed cache key.
-     */
-    private static TransformedWorkflowCacheKey buildCacheKey(
-        final long workflowId,
-        final String projectId,
-        final String outputPartialReference,
-        final String tenantId)
-    {
-        return new TransformedWorkflowCacheKey(outputPartialReference, projectId, tenantId, workflowId);
     }
 
     /**

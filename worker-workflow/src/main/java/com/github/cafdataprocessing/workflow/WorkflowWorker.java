@@ -130,9 +130,9 @@ public final class WorkflowWorker implements DocumentWorker
     public void processDocument(final Document document) throws InterruptedException, DocumentWorkerTransientException
     {
         // Get the worker task properties passed in custom data
-        final ExtractedProperties extractedProperties;
+        final TransformedWorkflowCacheKey workflowCacheKey;
         try {
-            extractedProperties = CustomDataExtractor.extractPropertiesFromCustomData(document);
+            workflowCacheKey = CustomDataExtractor.extractPropertiesFromCustomData(document);
         } catch (final InvalidExtractedPropertiesException ex) {
             LOG.warn("Custom data on document is not valid for this worker. Processing of this document will not "
                 + "proceed for this worker.");
@@ -140,7 +140,7 @@ public final class WorkflowWorker implements DocumentWorker
         }
 
         // Get the specified workflow and transform it to a JavaScript representation
-        final TransformWorkflowResult transformWorkflowResult = transformWorkflow(extractedProperties, document);
+        final TransformWorkflowResult transformWorkflowResult = transformWorkflow(workflowCacheKey, document);
         if (transformWorkflowResult == null) {
             LOG.warn("Failure during workflow transformation. Processing of this document will not proceed "
                 + "for this worker.");
@@ -163,22 +163,18 @@ public final class WorkflowWorker implements DocumentWorker
      * Retrieves transformed workflow result based on extracted properties passed. If unable to retrieve a result then a failure will be
      * added to the passed {@code document} and {@code null} returned.
      *
-     * @param extractedProperties properties to use in workflow retrieval and transformation.
+     * @param workflowCacheKey properties to use in workflow retrieval and transformation.
      * @param document document to update with failure details in event of any issues.
      * @return the transformed workflow result matching provided properties or null if there is a failure retrieving the transformed
      * workflow result.
      * @throws DocumentWorkerTransientException if there is a transient failure during workflow transformation.
      */
-    private TransformWorkflowResult transformWorkflow(final ExtractedProperties extractedProperties, final Document document)
+    private TransformWorkflowResult transformWorkflow(final TransformedWorkflowCacheKey workflowCacheKey, final Document document)
         throws DocumentWorkerTransientException
     {
         try {
             try {
-                return workflowCache.getTransformWorkflowResult(
-                    extractedProperties.getWorkflowId(),
-                    extractedProperties.getProjectId(),
-                    extractedProperties.getOutputPartialReference(),
-                    extractedProperties.getTenantId());
+                return workflowCache.getTransformWorkflowResult(workflowCacheKey);
             } catch (final ApiException firstException) {
                 // may have been a transient API issue, check if the API is healthy
                 final HealthStatus processingApiHealth = workflowAdminApi.healthCheck();
@@ -191,11 +187,7 @@ public final class WorkflowWorker implements DocumentWorker
                 // API is healthy so attempt to retrieve transform result one more time (in case it was temporarily
                 // unhealthy previously).
                 LOG.info("Attempting to get transformed workflow a second time after ApiException was thrown.");
-                return workflowCache.getTransformWorkflowResult(
-                    extractedProperties.getWorkflowId(),
-                    extractedProperties.getProjectId(),
-                    extractedProperties.getOutputPartialReference(),
-                    extractedProperties.getTenantId());
+                return workflowCache.getTransformWorkflowResult(workflowCacheKey);
             }
         } catch (final DataStoreException e) {
             document.addFailure(WorkflowWorkerConstants.ErrorCodes.STORE_WORKFLOW_FAILED, e.getMessage());

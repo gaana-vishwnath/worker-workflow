@@ -38,7 +38,7 @@ final class CustomDataExtractor
      * @param document document to retrieve properties from and potentially update with failures if any are missing.
      * @return the result containing properties extracted from the custom data
      */
-    public static ExtractedProperties extractPropertiesFromCustomData(final Document document)
+    public static TransformedWorkflowCacheKey extractPropertiesFromCustomData(final Document document)
         throws InvalidExtractedPropertiesException
     {
         final String outputPartialReference;
@@ -85,7 +85,7 @@ final class CustomDataExtractor
         }
 
         if (customDataValid) {
-            return new ExtractedProperties(outputPartialReference, projectId, tenantId, workflowId);
+            return new TransformedWorkflowCacheKey(outputPartialReference, projectId, tenantId, workflowId);
         } else {
             throw new InvalidExtractedPropertiesException();
         }
