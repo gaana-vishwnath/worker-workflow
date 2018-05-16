@@ -56,6 +56,7 @@
         <processingServiceContainerName>
             cafinternal/prereleases:processing-service-1.4.0-SNAPSHOT
         </processingServiceContainerName>
+        <gitRepo>https://github.com/CAFDataProcessing/worker-workflow</gitRepo>
     </properties>
 
     <developers>
@@ -118,6 +119,6 @@
     <scm>
         <connection>scm:git:https://github.com/CAFDataProcessing/worker-workflow.git</connection>
         <developerConnection>scm:git:https://github.com/CAFDataProcessing/worker-workflow.git</developerConnection>
-        <url>https://github.com/CAFDataProcessing/worker-workflow</url>
+        <url>${gitRepo}</url>
     </scm>
 </project>
