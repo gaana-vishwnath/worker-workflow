@@ -32,11 +32,6 @@
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <organization>
-        <name>EntIT Software LLC, a Micro Focus company</name>
-        <url>https://www.microfocus.com</url>
-    </organization>
-
     <name>Worker-Workflow</name>
     <description>A worker to generate a workflow of actions to execute in a chain for document workers</description>
     <url>https://github.com/CAFDataProcessing/worker-workflow</url>
