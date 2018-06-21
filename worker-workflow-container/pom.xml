@@ -306,7 +306,7 @@
                             <alias>workflow-db-installer</alias>
                             <name>workflow-db/installer</name>
                             <build>
-                                <from>cafapi/opensuse-jre8:1.2</from>
+                                <from>cafapi/opensuse-jre8:1</from>
                                 <tags>
                                     <tag>temporary-item-please-remove</tag>
                                 </tags>
@@ -427,7 +427,7 @@
                             <alias>worker-workflow</alias>
                             <name>${worker-workflow.container.name}</name>
                             <build>
-                                <from>cafapi/opensuse-jre8:1.2</from>
+                                <from>cafapi/opensuse-jre8:1</from>
                                 <labels>
                                     <Build.Number>${project.version}</Build.Number>
                                     <Build.Date>${maven.build.timestamp}</Build.Date>
