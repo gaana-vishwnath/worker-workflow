@@ -42,7 +42,7 @@
         <copyrightNotice>Copyright ${project.inceptionYear}-${copyrightYear} Micro Focus or one of its affiliates.</copyrightNotice>
         <corePolicyVersion>1.1.0-SNAPSHOT</corePolicyVersion>
         <corePolicyElasticsearchContainerName>
-            cafinternal/prereleases:policy-admin-elasticsearch-1.1.0-SNAPSHOT
+            cafdataprocessing/policy-admin-elasticsearch:1.1.0
         </corePolicyElasticsearchContainerName>
         <dockerHubOrganization>cafdataprocessing</dockerHubOrganization>
         <dockerCafDataProcessingOrg>
