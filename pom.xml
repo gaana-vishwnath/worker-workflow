@@ -49,9 +49,9 @@
             ${dockerImagePrefix}${dockerHubOrganization}${dockerOrgSeperator}
         </dockerCafDataProcessingOrg>
         <dockerProjectVersion>${dockerVersionSeperator}${project.version}</dockerProjectVersion>
-        <processingServiceVersion>1.4.0-SNAPSHOT</processingServiceVersion>
+        <processingServiceVersion>1.4.0-274</processingServiceVersion>
         <processingServiceContainerName>
-            cafinternal/prereleases:processing-service-1.4.0-SNAPSHOT
+            cafdataprocessing/processing-service:1.4.0
         </processingServiceContainerName>
         <gitRepo>https://github.com/CAFDataProcessing/worker-workflow</gitRepo>
     </properties>
