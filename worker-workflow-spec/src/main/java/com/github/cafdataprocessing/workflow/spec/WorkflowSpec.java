@@ -13,19 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cafdataprocessing.workflow;
+package com.github.cafdataprocessing.workflow.spec;
 
 import java.util.Objects;
 
 /**
  * Represents the properties that define a specific workflow
  */
-final class WorkflowSpec
+public class WorkflowSpec
 {
-    private final String outputPartialReference;
-    private final String projectId;
-    private final String tenantId;
-    private final long workflowId;
+    final String outputPartialReference;
+    final String projectId;
+    final String tenantId;
 
     /**
      * Create the workflow specification object using the partial storage reference, project ID and workflow ID provided.
@@ -33,19 +32,12 @@ final class WorkflowSpec
      * @param outputPartialReference partial storage reference for the transformed workflow this key is to be associated with.
      * @param projectId project ID of the transformed workflow this key is to be associated with.
      * @param tenantId a tenant ID to use in evaluating the workflow.
-     * @param workflowId workflow ID of the transformed workflow this key is to be associated with.
      */
-    public WorkflowSpec(
-        final String outputPartialReference,
-        final String projectId,
-        final String tenantId,
-        final long workflowId
-    )
+    public WorkflowSpec(final String outputPartialReference, final String projectId, final String tenantId)
     {
         this.outputPartialReference = outputPartialReference;
         this.projectId = projectId;
         this.tenantId = tenantId;
-        this.workflowId = workflowId;
     }
 
     public String getOutputPartialReference()
@@ -63,32 +55,9 @@ final class WorkflowSpec
         return tenantId;
     }
 
-    public long getWorkflowId()
-    {
-        return workflowId;
-    }
-
-    @Override
-    public boolean equals(final Object o)
-    {
-        if (this == o) {
-            return true;
-        }
-
-        if (!(o instanceof WorkflowSpec)) {
-            return false;
-        }
-
-        final WorkflowSpec cacheKeyToCheck = (WorkflowSpec) o;
-        return Objects.equals(this.outputPartialReference, cacheKeyToCheck.getOutputPartialReference())
-            && Objects.equals(this.projectId, cacheKeyToCheck.getProjectId())
-            && Objects.equals(this.tenantId, cacheKeyToCheck.getTenantId())
-            && this.workflowId == cacheKeyToCheck.getWorkflowId();
-    }
-
     @Override
     public int hashCode()
     {
-        return Objects.hash(outputPartialReference, projectId, tenantId, workflowId);
+        return Objects.hash(outputPartialReference, projectId, tenantId);
     }
 }

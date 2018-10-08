@@ -16,9 +16,11 @@
 package com.github.cafdataprocessing.workflow;
 
 import com.github.cafdataprocessing.processing.service.client.ApiException;
+import com.github.cafdataprocessing.workflow.spec.WorkflowSpec;
 import com.github.cafdataprocessing.workflow.transform.WorkflowRetrievalException;
 import com.github.cafdataprocessing.workflow.transform.WorkflowTransformer;
 import com.github.cafdataprocessing.workflow.transform.WorkflowTransformerException;
+import com.github.cafdataprocessing.workflow.transform.exceptions.InvalidWorkflowSpecificationException;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -73,7 +75,7 @@ final class TransformedWorkflowCache
                 @Override
                 public TransformWorkflowResult load(final WorkflowSpec key)
                     throws ApiException, DataStoreException, WorkflowRetrievalException,
-                           WorkflowTransformerException
+                           WorkflowTransformerException, InvalidWorkflowSpecificationException
                 {
                     return transformWorkflow(key);
                 }
@@ -101,7 +103,8 @@ final class TransformedWorkflowCache
      */
     public TransformWorkflowResult getTransformWorkflowResult(
         final WorkflowSpec workflowSpec
-    ) throws ApiException, DataStoreException, WorkflowRetrievalException, WorkflowTransformerException
+    ) throws ApiException, DataStoreException, WorkflowRetrievalException, WorkflowTransformerException,
+             InvalidWorkflowSpecificationException
     {
         try {
             return workflowCache.get(workflowSpec);
@@ -120,6 +123,9 @@ final class TransformedWorkflowCache
             }
             if (cause instanceof WorkflowTransformerException) {
                 throw (WorkflowTransformerException) cause;
+            }
+            if (cause instanceof InvalidWorkflowSpecificationException) {
+                throw (InvalidWorkflowSpecificationException) cause;
             }
             throw new RuntimeException(e);
         }
@@ -154,13 +160,13 @@ final class TransformedWorkflowCache
      */
     private TransformWorkflowResult transformWorkflow(
         final WorkflowSpec cacheKey
-    ) throws ApiException, DataStoreException, WorkflowRetrievalException, WorkflowTransformerException
+    ) throws ApiException, DataStoreException, WorkflowRetrievalException, WorkflowTransformerException,
+             InvalidWorkflowSpecificationException
     {
         final String workflowJavaScript;
+
         try {
-            workflowJavaScript = WorkflowTransformer.retrieveAndTransformWorkflowToJavaScript(
-                cacheKey.getWorkflowId(), cacheKey.getProjectId(),
-                processingApiUrl, cacheKey.getTenantId());
+            workflowJavaScript = WorkflowTransformer.retrieveAndTransformWorkflowToJavaScript(cacheKey, processingApiUrl);
         } catch (final ApiException | WorkflowRetrievalException | WorkflowTransformerException e) {
             LOG.error("A failure occurred trying to transform Workflow to JavaScript representation.", e);
             throw e;

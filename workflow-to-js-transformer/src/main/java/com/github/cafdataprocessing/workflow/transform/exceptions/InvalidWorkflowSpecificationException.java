@@ -13,11 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.github.cafdataprocessing.workflow;
+package com.github.cafdataprocessing.workflow.transform.exceptions;
 
-final class InvalidWorkflowSpecException extends Exception
+public class InvalidWorkflowSpecificationException extends Exception
 {
-    public InvalidWorkflowSpecException()
+    public InvalidWorkflowSpecificationException(final String message)
     {
+        super(message);
     }
 }
