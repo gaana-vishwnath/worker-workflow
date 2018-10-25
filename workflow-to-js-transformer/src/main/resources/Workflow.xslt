@@ -344,6 +344,8 @@ function evaluateActionDetails(document, actionDetails) {
             } else {
                 throw new java.lang.RuntimeException("Invalid script definition on action. No valid script value source.");
             }
+
+            scriptObjectAdded.install();
         }
     }
 
