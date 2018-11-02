@@ -32,16 +32,16 @@ function onAfterProcessTask(eventObj) {
 }
 
 function processDocument(document) {
-    var tenantSettingsJson = document.getCustomData("tenantSettings");
-    if(tenantSettingsJson == null){
-        throw new java.lang.UnsupportedOperationException("Document must contain tenantSettings on customData.");
+    var repositorySettingsJson = document.getCustomData("repositorySettings");
+    if(repositorySettingsJson == null){
+        throw new java.lang.UnsupportedOperationException("Document must contain repositorySettings on customData.");
     }
-    var tenantSettings = JSON.parse(tenantSettingsJson);
+    var repositorySettings = JSON.parse(repositorySettingsJson);
     updateActionStatus(document);
 <xsl:for-each select="processingRules/processingRule"><xsl:sort select="details/priority" data-type="number" order="ascending"/>
 <xsl:if test="details/enabled = 'true'">
     // Rule Name: <xsl:value-of select="details/name"/>
-    var ruleResult = rule_<xsl:value-of select="details/id"/>(document, tenantSettings);
+    var ruleResult = rule_<xsl:value-of select="details/id"/>(document, repositorySettings);
     if (ruleResult == ACTION_TO_EXECUTE)
         return;
 </xsl:if>
@@ -69,7 +69,7 @@ function processDocument(document) {
 <xsl:variable name="ruleId" select="details/id"/>
 // Rule Name: <xsl:value-of select="details/name"/>
 // Return ACTION_TO_EXECUTE if an action in the rule should be executed
-function rule_<xsl:value-of select="$ruleId"/>(document, tenantSettings) {
+function rule_<xsl:value-of select="$ruleId"/>(document, repositorySettings) {
     if (isRuleCompleted(document, '<xsl:value-of select="$ruleId"/>')) {
         return ALREADY_EXECUTED;
     }
@@ -84,7 +84,7 @@ function rule_<xsl:value-of select="$ruleId"/>(document, tenantSettings) {
 <xsl:for-each select="actions/action">
         <xsl:sort select="details/order" data-type="number" order="ascending"/>
     // Action Name: <xsl:value-of select="details/name"/>
-    var actionResult = action_<xsl:value-of select="details/id"/>(document, tenantSettings);
+    var actionResult = action_<xsl:value-of select="details/id"/>(document, repositorySettings);
     if (actionResult == ACTION_TO_EXECUTE)
         return ACTION_TO_EXECUTE;
 
@@ -97,7 +97,7 @@ function rule_<xsl:value-of select="$ruleId"/>(document, tenantSettings) {
 <xsl:variable name="actionId" select="details/id"/>
 // Action Name: <xsl:value-of select="details/name"/>
 // Return CONDITIONS_NOT_MET if the document did not match the action conditions
-function action_<xsl:value-of select="$actionId"/>(document, tenantSettings) {
+function action_<xsl:value-of select="$actionId"/>(document, repositorySettings) {
     if (isActionCompleted(document, '<xsl:value-of select="$actionId"/>')) {
         return ALREADY_EXECUTED;
     }
@@ -156,8 +156,8 @@ function action_<xsl:value-of select="$actionId"/>(document, tenantSettings) {
         <xsl:choose><xsl:when test="source = 'inlineJson' and data !=''">'<xsl:call-template name="jsonDataSource"><xsl:with-param name="currentProperties" select="data/*"/></xsl:call-template>'</xsl:when></xsl:choose>
         <xsl:choose><xsl:when test="source = 'projectId'">'<xsl:value-of select="$projectId"/>'</xsl:when></xsl:choose>
         <xsl:choose><xsl:when test="source = 'tenantId'">'<xsl:value-of select="$tenantId"/>'</xsl:when></xsl:choose>
-        <xsl:choose><xsl:when test="source = 'tenantData'">tenantSettings["<xsl:value-of select="key"/>"]</xsl:when></xsl:choose>
-    </xsl:template>
+        <xsl:choose><xsl:when test="source[taskSettings]">resolveValue(tenantSettings["<xsl:value-of select="source/taskSettings/key"/>"], "<xsl:value-of select="source/taskSettings/defaultValue"/>")'</xsl:when></xsl:choose>
+   </xsl:template>
 
     <xsl:template name="jsonDataSource"><xsl:param name="currentProperties"/>{<xsl:for-each select="$currentProperties">"<xsl:value-of select="name(.)"/>": <xsl:call-template name="jsonPropertyOutput"/><xsl:if test="position() != last()">, </xsl:if></xsl:for-each>}</xsl:template>
 
@@ -315,6 +315,15 @@ function updateActionStatus(document) {
 </xsl:template>
 
     <xsl:template name="utilityFunctions">
+
+function resolveValue(value, default){
+//TODO value can be empty string
+        var v = value ? value : default;
+    //TODO v is empty throw
+        
+    return v;
+}
+        
 // Evaluate the determined details of an action, either executing the action against document or preparing the
 // document to execute the action
 function evaluateActionDetails(document, actionDetails) {
