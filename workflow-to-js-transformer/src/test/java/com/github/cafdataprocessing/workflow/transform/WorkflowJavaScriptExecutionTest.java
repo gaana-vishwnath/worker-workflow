@@ -877,7 +877,7 @@ public class WorkflowJavaScriptExecutionTest
                URISyntaxException, NoSuchMethodException, DataStoreException, ApiException
     {
         final ClientHandlerException ex = new ClientHandlerException("Simulating inability to contact the data processing service");
-        final ApiClient apiClient = getMockApiClientThatWillThrow(ex);
+        final ApiClient apiClient = getMockTenantApiClient(null, null);
         final String workflowJSStr = getWorkflowJavaScriptFromXML("/test_workflow_5.xml", apiClient);
 
         Assert.fail("ApiException should have been thrown before this point.");

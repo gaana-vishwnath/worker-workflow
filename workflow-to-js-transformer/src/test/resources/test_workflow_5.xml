@@ -36,11 +36,35 @@
                     <details>
                         <settings class="linked-hash-map">
                             <workerName>testworker</workerName>
+                            <OPERATION_MODE class="linked-hash-map">
+                                <source>
+                                    <taskSettings>
+                                        <key>ee.operationmode</key>
+                                        <defaultValue>DETECT</defaultValue>
+                                    </taskSettings>
+                                </source>
+                            </OPERATION_MODE>
                             <customData class="linked-hash-map">
                                 <ee.grammarMap class="linked-hash-map">
-                                    <source>tenantData</source>
-                                    <key>ee.grammarMap</key>
+                                    <sources>
+                                        <taskSettings>
+                                            <key>ee.grammarmap</key>
+                                        </taskSettings>
+                                    </sources>
+                                    <sources>
+                                        <repositorySettings>
+                                            <key>ee.grammarmap</key>
+                                            <repositoryId>
+                                                <source>field</source>
+                                                <key>REPOSITORY_ID</key>
+                                            </repositoryId>
+                                        </repositorySettings>
+                                    </sources>
                                 </ee.grammarMap>
+                                <tenantId class="linked-hash-map">
+                                    <source>taskSettings</source>
+                                    <key>tenantId</key>
+                                </tenantId>
                             </customData>
                         </settings>
                         <name>String condition action</name>

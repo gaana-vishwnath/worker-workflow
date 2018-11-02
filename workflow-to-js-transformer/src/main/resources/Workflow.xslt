@@ -32,11 +32,16 @@ function onAfterProcessTask(eventObj) {
 }
 
 function processDocument(document) {
+    var tenantSettingsJson = document.getCustomData("tenantSettings");
+    if(tenantSettingsJson == null){
+        throw new java.lang.UnsupportedOperationException("Document must contain tenantSettings on customData.");
+    }
+    var tenantSettings = JSON.parse(tenantSettingsJson);
     updateActionStatus(document);
 <xsl:for-each select="processingRules/processingRule"><xsl:sort select="details/priority" data-type="number" order="ascending"/>
 <xsl:if test="details/enabled = 'true'">
     // Rule Name: <xsl:value-of select="details/name"/>
-    var ruleResult = rule_<xsl:value-of select="details/id"/>(document);
+    var ruleResult = rule_<xsl:value-of select="details/id"/>(document, tenantSettings);
     if (ruleResult == ACTION_TO_EXECUTE)
         return;
 </xsl:if>
@@ -64,7 +69,7 @@ function processDocument(document) {
 <xsl:variable name="ruleId" select="details/id"/>
 // Rule Name: <xsl:value-of select="details/name"/>
 // Return ACTION_TO_EXECUTE if an action in the rule should be executed
-function rule_<xsl:value-of select="$ruleId"/>(document) {
+function rule_<xsl:value-of select="$ruleId"/>(document, tenantSettings) {
     if (isRuleCompleted(document, '<xsl:value-of select="$ruleId"/>')) {
         return ALREADY_EXECUTED;
     }
@@ -79,7 +84,7 @@ function rule_<xsl:value-of select="$ruleId"/>(document) {
 <xsl:for-each select="actions/action">
         <xsl:sort select="details/order" data-type="number" order="ascending"/>
     // Action Name: <xsl:value-of select="details/name"/>
-    var actionResult = action_<xsl:value-of select="details/id"/>(document);
+    var actionResult = action_<xsl:value-of select="details/id"/>(document, tenantSettings);
     if (actionResult == ACTION_TO_EXECUTE)
         return ACTION_TO_EXECUTE;
 
@@ -92,7 +97,7 @@ function rule_<xsl:value-of select="$ruleId"/>(document) {
 <xsl:variable name="actionId" select="details/id"/>
 // Action Name: <xsl:value-of select="details/name"/>
 // Return CONDITIONS_NOT_MET if the document did not match the action conditions
-function action_<xsl:value-of select="$actionId"/>(document) {
+function action_<xsl:value-of select="$actionId"/>(document, tenantSettings) {
     if (isActionCompleted(document, '<xsl:value-of select="$actionId"/>')) {
         return ALREADY_EXECUTED;
     }
@@ -141,17 +146,17 @@ function action_<xsl:value-of select="$actionId"/>(document) {
     <xsl:template match="customData">
         <xsl:for-each select="*"><xsl:variable name="sourceData"><xsl:call-template name="customDataSource"/></xsl:variable>
             <xsl:choose>
-                <xsl:when test="$sourceData != ''">'<xsl:value-of select="name(.)"/>': '<xsl:value-of select="$sourceData"/>'<xsl:if test="position() != last()">, </xsl:if></xsl:when>
+                <xsl:when test="$sourceData != ''">'<xsl:value-of select="name(.)"/>': <xsl:value-of select="$sourceData"/><xsl:if test="position() != last()">, </xsl:if></xsl:when>
                 <xsl:when test="not(source)">'<xsl:value-of select="name(.)"/>': '<xsl:value-of select="workflow_transform:TransformerFunctions.escapeForJavaScript(text())"/>'<xsl:if test="position() != last()">, </xsl:if></xsl:when>
             </xsl:choose>
         </xsl:for-each>
     </xsl:template>
 
     <xsl:template name="customDataSource">
-        <xsl:choose><xsl:when test="source = 'inlineJson' and data !=''"><xsl:call-template name="jsonDataSource"><xsl:with-param name="currentProperties" select="data/*"/></xsl:call-template></xsl:when></xsl:choose>
-        <xsl:choose><xsl:when test="source = 'projectId'"><xsl:value-of select="$projectId"/></xsl:when></xsl:choose>
-        <xsl:choose><xsl:when test="source = 'tenantId'"><xsl:value-of select="$tenantId"/></xsl:when></xsl:choose>
-        <xsl:choose><xsl:when test="source = 'tenantData'"><xsl:value-of select="workflow_transform:TransformerFunctions.getTenantSpecificConfigValue($apiClient, $tenantId, key)"/></xsl:when></xsl:choose>
+        <xsl:choose><xsl:when test="source = 'inlineJson' and data !=''">'<xsl:call-template name="jsonDataSource"><xsl:with-param name="currentProperties" select="data/*"/></xsl:call-template>'</xsl:when></xsl:choose>
+        <xsl:choose><xsl:when test="source = 'projectId'">'<xsl:value-of select="$projectId"/>'</xsl:when></xsl:choose>
+        <xsl:choose><xsl:when test="source = 'tenantId'">'<xsl:value-of select="$tenantId"/>'</xsl:when></xsl:choose>
+        <xsl:choose><xsl:when test="source = 'tenantData'">tenantSettings["<xsl:value-of select="key"/>"]</xsl:when></xsl:choose>
     </xsl:template>
 
     <xsl:template name="jsonDataSource"><xsl:param name="currentProperties"/>{<xsl:for-each select="$currentProperties">"<xsl:value-of select="name(.)"/>": <xsl:call-template name="jsonPropertyOutput"/><xsl:if test="position() != last()">, </xsl:if></xsl:for-each>}</xsl:template>
