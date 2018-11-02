@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:sxl="http://www.w3.org/1999/XSL/Transform" xmlns:xslt="http://www.w3.org/1999/XSL/Transform"
-                xmlns:workflow_transform="com.github.cafdataprocessing.workflow.transform">
+                xmlns:workflow_transform="com.github.cafdataprocessing.workflow.transform"
+                xmlns:xls="http://www.w3.org/1999/XSL/Transform">
     <xsl:output method="text" omit-xml-declaration="yes" indent="no"/>
     
     <xsl:param name="projectId"/>
@@ -47,6 +48,20 @@ function processDocument(document) {
 </xsl:if>
 </xsl:for-each>
 }
+
+function getRequiredSettings() {
+    var taskSettings = [];
+    <xls:call-template name="requiredTaskSettings"></xls:call-template>
+
+    var repositorySettings = {};
+    <xls:call-template name="requiredRepositorySettings"></xls:call-template>
+
+    return {
+        task: taskSettings,
+        repository: repositorySettings
+    };
+}
+
 <xsl:for-each select="processingRules/processingRule">
     <xsl:sort select="details/priority" data-type="number" order="ascending"/>
     <xsl:if test="details/enabled = 'true'">
@@ -92,6 +107,22 @@ function rule_<xsl:value-of select="$ruleId"/>(document, tenantSettings) {
     recordRuleCompleted(document, '<xsl:value-of select="$ruleId"/>');
 }
 </xsl:template>
+
+    <xsl:template name="requiredTaskSettings">
+        <xsl:for-each select="//taskSettings">
+            taskSettings.push("<xsl:value-of select="key"/>");
+        </xsl:for-each>
+    </xsl:template>
+
+    <xsl:template name="requiredRepositorySettings">
+        <xsl:for-each select="//repositorySettings">
+            repositorySettings["<xsl:value-of select="key"/>"] = {
+            source: "<xsl:value-of select="repositoryId/source"/>",
+            key: "<xsl:value-of select="repositoryId/key"/>"
+            };
+        </xsl:for-each>
+    </xsl:template>
+
 
     <xsl:template name="actionFunction">
 <xsl:variable name="actionId" select="details/id"/>
