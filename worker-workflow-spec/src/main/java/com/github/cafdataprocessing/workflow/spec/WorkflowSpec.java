@@ -30,7 +30,6 @@ public class WorkflowSpec
      *
      * @param outputPartialReference partial storage reference for the transformed workflow this key is to be associated with.
      * @param projectId project ID of the transformed workflow this key is to be associated with.
-     * @param tenantId a tenant ID to use in evaluating the workflow.
      */
     public WorkflowSpec(final String outputPartialReference, final String projectId)
     {
