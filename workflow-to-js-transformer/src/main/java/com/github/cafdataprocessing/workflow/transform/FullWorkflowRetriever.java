@@ -72,6 +72,7 @@ public class FullWorkflowRetriever
      * Creates a FullWorkflowRetriever using the provided ProcessingApiProvider.
      *
      * @param apisProvider for use in accessing processing-service APIs
+     * @param workflowIdsCachePeriodAsStr how long to cache the workflow for in seconds.
      */
     public FullWorkflowRetriever(final ProcessingApisProvider apisProvider, final String workflowIdsCachePeriodAsStr)
     {
@@ -99,6 +100,7 @@ public class FullWorkflowRetriever
      * @throws ApiException if certain failures occur communicating with the processing service to retrieve the workflow e.g. Invalid
      * requests will result in this exception.
      * @throws WorkflowRetrievalException if certain failures occur communicating with the processing service to retrieve the workflow.
+     * @throws InvalidWorkflowSpecificationException if the workflow id cannot be obtained.
      * e.g. The processing service not being contactable.
      */
     public FullWorkflow getFullWorkflow(final WorkflowSpec workflowSpec)

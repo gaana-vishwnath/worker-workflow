@@ -6,8 +6,6 @@
     <xsl:output method="text" omit-xml-declaration="yes" indent="no"/>
     
     <xsl:param name="projectId"/>
-    <xsl:param name="tenantId"/>
-    <xsl:param name="apiClient"/>
 
     <xsl:template match="/workflow">
 // Workflow ID: <xsl:value-of select="details/id"/>
@@ -33,33 +31,22 @@ function onAfterProcessTask(eventObj) {
 }
 
 function processDocument(document) {
-    var repositorySettingsJson = document.getCustomData("repositorySettings");
-    if(repositorySettingsJson == null){
-        throw new java.lang.UnsupportedOperationException("Document must contain repositorySettings on customData.");
+    var cafWorkflowSettingsJson = document.getCustomData("CAF_WORKFLOW_SETTINGS") 
+                                ? document.getCustomData("CAF_WORKFLOW_SETTINGS") 
+                                : document.getField("CAF_WORKFLOW_SETTINGS").getStringValues().stream().findFirst().get();
+    if (cafWorkflowSettingsJson === undefined){
+        throw new java.lang.UnsupportedOperationException("Document must contain field CAF_WORKFLOW_SETTINGS.");
     }
-    var repositorySettings = JSON.parse(repositorySettingsJson);
+    var cafWorkflowSettings = JSON.parse(cafWorkflowSettingsJson);
     updateActionStatus(document);
 <xsl:for-each select="processingRules/processingRule"><xsl:sort select="details/priority" data-type="number" order="ascending"/>
 <xsl:if test="details/enabled = 'true'">
     // Rule Name: <xsl:value-of select="details/name"/>
-    var ruleResult = rule_<xsl:value-of select="details/id"/>(document, repositorySettings);
+    var ruleResult = rule_<xsl:value-of select="details/id"/>(document, cafWorkflowSettings);
     if (ruleResult == ACTION_TO_EXECUTE)
         return;
 </xsl:if>
 </xsl:for-each>
-}
-
-function getRequiredSettings() {
-    var taskSettings = [];
-    <xls:call-template name="requiredTaskSettings"></xls:call-template>
-
-    var repositorySettings = {};
-    <xls:call-template name="requiredRepositorySettings"></xls:call-template>
-
-    return {
-        task: taskSettings,
-        repository: repositorySettings
-    };
 }
 
 <xsl:for-each select="processingRules/processingRule">
@@ -84,7 +71,7 @@ function getRequiredSettings() {
 <xsl:variable name="ruleId" select="details/id"/>
 // Rule Name: <xsl:value-of select="details/name"/>
 // Return ACTION_TO_EXECUTE if an action in the rule should be executed
-function rule_<xsl:value-of select="$ruleId"/>(document, repositorySettings) {
+function rule_<xsl:value-of select="$ruleId"/>(document, settings) {
     if (isRuleCompleted(document, '<xsl:value-of select="$ruleId"/>')) {
         return ALREADY_EXECUTED;
     }
@@ -99,7 +86,7 @@ function rule_<xsl:value-of select="$ruleId"/>(document, repositorySettings) {
 <xsl:for-each select="actions/action">
         <xsl:sort select="details/order" data-type="number" order="ascending"/>
     // Action Name: <xsl:value-of select="details/name"/>
-    var actionResult = action_<xsl:value-of select="details/id"/>(document, repositorySettings);
+    var actionResult = action_<xsl:value-of select="details/id"/>(document, settings);
     if (actionResult == ACTION_TO_EXECUTE)
         return ACTION_TO_EXECUTE;
 
@@ -108,27 +95,11 @@ function rule_<xsl:value-of select="$ruleId"/>(document, repositorySettings) {
 }
 </xsl:template>
 
-    <xsl:template name="requiredTaskSettings">
-        <xsl:for-each select="//taskSettings">
-            taskSettings.push("<xsl:value-of select="key"/>");
-        </xsl:for-each>
-    </xsl:template>
-
-    <xsl:template name="requiredRepositorySettings">
-        <xsl:for-each select="//repositorySettings">
-            repositorySettings["<xsl:value-of select="key"/>"] = {
-            source: "<xsl:value-of select="repositoryId/source"/>",
-            key: "<xsl:value-of select="repositoryId/key"/>"
-            };
-        </xsl:for-each>
-    </xsl:template>
-
-
     <xsl:template name="actionFunction">
 <xsl:variable name="actionId" select="details/id"/>
 // Action Name: <xsl:value-of select="details/name"/>
 // Return CONDITIONS_NOT_MET if the document did not match the action conditions
-function action_<xsl:value-of select="$actionId"/>(document, repositorySettings) {
+function action_<xsl:value-of select="$actionId"/>(document, settings) {
     if (isActionCompleted(document, '<xsl:value-of select="$actionId"/>')) {
         return ALREADY_EXECUTED;
     }
@@ -186,8 +157,10 @@ function action_<xsl:value-of select="$actionId"/>(document, repositorySettings)
     <xsl:template name="customDataSource">
         <xsl:choose><xsl:when test="source = 'inlineJson' and data !=''">'<xsl:call-template name="jsonDataSource"><xsl:with-param name="currentProperties" select="data/*"/></xsl:call-template>'</xsl:when></xsl:choose>
         <xsl:choose><xsl:when test="source = 'projectId'">'<xsl:value-of select="$projectId"/>'</xsl:when></xsl:choose>
-        <xsl:choose><xsl:when test="source = 'tenantId'">'<xsl:value-of select="$tenantId"/>'</xsl:when></xsl:choose>
-        <xsl:choose><xsl:when test="source[taskSettings]">resolveValue(tenantSettings["<xsl:value-of select="source/taskSettings/key"/>"], "<xsl:value-of select="source/taskSettings/defaultValue"/>")'</xsl:when></xsl:choose>
+        <xsl:choose><xsl:when test="source[taskSettings]">resolveValue(settings.task["<xsl:value-of select="source/taskSettings/key"/>"], "<xsl:value-of select="source/taskSettings/defaultValue"/>")</xsl:when></xsl:choose>
+        <xsl:choose><xsl:when test="source[tenantSettings]">resolveValue(settings.tenant["<xsl:value-of select="source/tenantSettings/key"/>"], "<xsl:value-of select="source/tenantSettings/defaultValue"/>")</xsl:when></xsl:choose>
+        <xsl:choose><xsl:when test="source[repositorySettings]">resolveValue(settings.repository["<xsl:value-of select="source/repositorySettings/key"/>"], "<xsl:value-of select="source/repositorySettings/defaultValue"/>")</xsl:when></xsl:choose>
+        <xsl:choose><xsl:when test="sources[taskSettings] and sources[repositorySettings]">resolveValue(settings.task["<xsl:value-of select="sources/taskSettings/key"/>"], settings.repository["<xsl:value-of select="sources/repositorySettings/key"/>"])</xsl:when></xsl:choose>
    </xsl:template>
 
     <xsl:template name="jsonDataSource"><xsl:param name="currentProperties"/>{<xsl:for-each select="$currentProperties">"<xsl:value-of select="name(.)"/>": <xsl:call-template name="jsonPropertyOutput"/><xsl:if test="position() != last()">, </xsl:if></xsl:for-each>}</xsl:template>
@@ -347,11 +320,11 @@ function updateActionStatus(document) {
 
     <xsl:template name="utilityFunctions">
 
-function resolveValue(value, default){
-//TODO value can be empty string
-        var v = value ? value : default;
-    //TODO v is empty throw
-        
+function resolveValue(value, defaultValue){
+    var v = value ? value : defaultValue;
+    if(v === undefined) {
+         throw new java.lang.RuntimeException("Unable to determine which value to assign to custom data as both possiblities are undefined");    
+    }
     return v;
 }
         

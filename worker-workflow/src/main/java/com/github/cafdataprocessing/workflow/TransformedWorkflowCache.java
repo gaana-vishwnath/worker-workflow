@@ -17,6 +17,7 @@ package com.github.cafdataprocessing.workflow;
 
 import com.github.cafdataprocessing.processing.service.client.ApiException;
 import com.github.cafdataprocessing.workflow.spec.WorkflowSpec;
+import com.github.cafdataprocessing.workflow.transform.WorkflowRepresentation;
 import com.github.cafdataprocessing.workflow.transform.WorkflowRetrievalException;
 import com.github.cafdataprocessing.workflow.transform.WorkflowTransformer;
 import com.github.cafdataprocessing.workflow.transform.WorkflowTransformerException;
@@ -158,15 +159,14 @@ final class TransformedWorkflowCache
      * @throws WorkflowRetrievalException if certain failures occur communicating with the processing service to retrieve the workflow.
      * e.g. The processing service not being contactable.
      */
-    private TransformWorkflowResult transformWorkflow(
-        final WorkflowSpec cacheKey
-    ) throws ApiException, DataStoreException, WorkflowRetrievalException, WorkflowTransformerException,
+    private TransformWorkflowResult transformWorkflow(final WorkflowSpec cacheKey)
+        throws ApiException, DataStoreException, WorkflowRetrievalException, WorkflowTransformerException,
              InvalidWorkflowSpecificationException
     {
-        final String workflowJavaScript;
+        final WorkflowRepresentation workflow;
 
         try {
-            workflowJavaScript = WorkflowTransformer.retrieveAndTransformWorkflowToJavaScript(cacheKey, processingApiUrl);
+            workflow = WorkflowTransformer.retrieveAndTransformWorkflowToJavaScript(cacheKey, processingApiUrl);
         } catch (final ApiException | WorkflowRetrievalException | WorkflowTransformerException e) {
             LOG.error("A failure occurred trying to transform Workflow to JavaScript representation.", e);
             throw e;
@@ -174,11 +174,11 @@ final class TransformedWorkflowCache
         // Store the generated JavaScript in data store so it can be passed to other workers in a compact form
         final String workflowStorageRef;
         try {
-            workflowStorageRef = storeWorkflow(workflowJavaScript, cacheKey.getOutputPartialReference());
+            workflowStorageRef = storeWorkflow(workflow.getWorkflowJavascript(), cacheKey.getOutputPartialReference());
         } catch (final DataStoreException e) {
             LOG.error("A failure occurred trying to store transformed workflow.", e);
             throw e;
         }
-        return new TransformWorkflowResult(workflowJavaScript, workflowStorageRef);
+        return new TransformWorkflowResult(workflow, workflowStorageRef);
     }
 }

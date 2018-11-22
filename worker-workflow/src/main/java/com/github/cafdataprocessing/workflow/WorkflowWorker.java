@@ -152,13 +152,20 @@ public final class WorkflowWorker implements DocumentWorker
 
         // Add the workflow scripts to the document task.
         try {
-            WorkflowProcessingScripts.setScripts(
-                document,
-                transformWorkflowResult.getTransformedWorkflow(),
-                transformWorkflowResult.getWorkflowStorageRef());
-        } catch (final ScriptException e) {
-            LOG.error("A failure occurred trying to add the scripts to the task.", e);
-            document.addFailure(WorkflowWorkerConstants.ErrorCodes.ADD_WORKFLOW_SCRIPTS_FAILED, e.getMessage());
+            // Retrieve required workflow settings
+            AddWorkflowConfigs.addCustomWorkflowConfig(transformWorkflowResult.getWorkflowRepresentation().getWorkflowSettings(),
+                                                       document);
+            try {
+                WorkflowProcessingScripts.setScripts(
+                    document,
+                    transformWorkflowResult.getWorkflowRepresentation().getWorkflowJavascript(),
+                    transformWorkflowResult.getWorkflowStorageRef());
+            } catch (final ScriptException e) {
+                LOG.error("A failure occurred trying to add the scripts to the task.", e);
+                document.addFailure(WorkflowWorkerConstants.ErrorCodes.ADD_WORKFLOW_SCRIPTS_FAILED, e.getMessage());
+            }
+        } catch (final ApiException ex) {
+            document.addFailure("API_EXCEPTION", ex.getMessage());
         }
     }
 

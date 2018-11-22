@@ -15,11 +15,6 @@
  */
 package com.github.cafdataprocessing.workflow.transform;
 
-import com.github.cafdataprocessing.processing.service.client.ApiClient;
-import com.github.cafdataprocessing.processing.service.client.ApiException;
-import com.github.cafdataprocessing.processing.service.client.api.TenantConfigurationApi;
-import com.github.cafdataprocessing.processing.service.client.model.EffectiveTenantConfigValue;
-import com.sun.jersey.api.client.ClientHandlerException;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -72,47 +67,5 @@ public class TransformerFunctions
             return null;
         }
         return escapeForJavaScript(getEnvironmentValue(workerName.toLowerCase(Locale.ENGLISH) + ".taskqueue"));
-    }
-
-    /**
-     * Returns the value of the tenant's configuration that was requested.
-     *
-     * @param apiClientObject The api client that should be used when contacting the data processing service.
-     * @param tenantId A unique string that identifies the tenant.
-     * @param key The unique string used to identify a specific configuration.
-     * @return The string representation of the value of the configuration requested.
-     * @throws ApiException When an error occurs while trying to retrieve a config's value from the processing service.
-     * @throws NullPointerException When the tenantId or key passed to the method is null.
-     */
-    public static String getTenantSpecificConfigValue(final Object apiClientObject, final String tenantId, final String key)
-        throws ApiException
-    {
-        Objects.requireNonNull(tenantId);
-        Objects.requireNonNull(key);
-        final ApiClient apiClient = (ApiClient) apiClientObject;
-        final TenantConfigurationApi tenantsApi = new TenantConfigurationApi(apiClient);
-        try {
-            final EffectiveTenantConfigValue effectiveTenantConfigValue = tenantsApi.getEffectiveTenantConfig(tenantId, key);
-            LOG.debug("Retrieved value for tenant configuration using key: {}", key);
-            LOG.debug("Retrieved value for tenant configuration is of type: {}", effectiveTenantConfigValue.getValueType());
-            // escape the config value in case it has characters that would cause issues in JavaScript
-            return escapeForJavaScript(effectiveTenantConfigValue.getValue());
-        } catch (final ApiException ex) {
-            if (ex.getCode() == 404) {
-                LOG.error("Unable to obtain tenant configuration from processing service for tenant: {} using key: {} as no "
-                    + "configuration could be found match the provided key", tenantId, key);
-                throw ex;
-            }
-            LOG.error("Unable to obtain tenant configuration from processing service for tenant: {} using key: {}", tenantId, key);
-            throw ex;
-        } catch (final ClientHandlerException ex) {
-            /**
-             * Wrapping this exception as an ApiException as it was caused by an in ability to contact the processing service. Wrapping it
-             * in an ApiException allows for this to be picked up be the calling code and it can then make a decision to retry as the
-             * connection problem may have been transient.
-             */
-            LOG.error("Unable to obtain tenant configuration from processing service for tenant: {} using key: {}", tenantId, key);
-            throw new ApiException(500, "Unable to contact processing service to retrieve tenant configs.");
-        }
     }
 }

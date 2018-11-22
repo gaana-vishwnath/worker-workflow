@@ -51,7 +51,6 @@ final class WorkflowSpecProvider
     {
         final String outputPartialReference;
         final String projectId;
-        final String tenantId;
         boolean customDataValid = true;
 
         outputPartialReference = WorkflowSpecProvider.getSetOutputPartialReference(document);
@@ -64,14 +63,6 @@ final class WorkflowSpecProvider
             LOG.error("No project ID value passed to worker.");
             document.addFailure(WorkflowWorkerConstants.ErrorCodes.INVALID_CUSTOM_DATA,
                                 "No project ID value passed to worker.");
-            customDataValid = false;
-        }
-
-        tenantId = WorkflowSpecProvider.getSetTenantId(document);
-        if (tenantId == null || tenantId.isEmpty()) {
-            LOG.error("No tenant ID value passed to worker.");
-            document.addFailure(WorkflowWorkerConstants.ErrorCodes.INVALID_CUSTOM_DATA,
-                                "No tenant ID value passed to worker.");
             customDataValid = false;
         }
 
@@ -94,9 +85,9 @@ final class WorkflowSpecProvider
                                     "No workflow ID or name value passed to worker.");
                 customDataValid = false;
             }
-            workflowSpec = new WorkflowNameBasedSpec(outputPartialReference, projectId, tenantId, workflowName);
+            workflowSpec = new WorkflowNameBasedSpec(outputPartialReference, projectId, workflowName);
         } else {
-            workflowSpec = new WorkflowIdBasedSpec(outputPartialReference, projectId, tenantId, extractedWorkflowId);
+            workflowSpec = new WorkflowIdBasedSpec(outputPartialReference, projectId, extractedWorkflowId);
         }
 
         if (customDataValid) {

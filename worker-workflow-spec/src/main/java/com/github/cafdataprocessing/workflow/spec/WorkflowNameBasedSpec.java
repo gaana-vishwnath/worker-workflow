@@ -29,10 +29,9 @@ public final class WorkflowNameBasedSpec extends WorkflowSpec
      * @param tenantId a tenant ID to use in evaluating the workflow.
      * @param workflowName workflow name of the transformed workflow this key is to be associated with.
      */
-    public WorkflowNameBasedSpec(final String outputPartialReference, final String projectId, final String tenantId,
-                                 final String workflowName)
+    public WorkflowNameBasedSpec(final String outputPartialReference, final String projectId, final String workflowName)
     {
-        super(outputPartialReference, projectId, tenantId);
+        super(outputPartialReference, projectId);
         this.workflowName = workflowName;
     }
 
@@ -55,13 +54,12 @@ public final class WorkflowNameBasedSpec extends WorkflowSpec
         final WorkflowNameBasedSpec cacheKeyToCheck = (WorkflowNameBasedSpec) o;
         return Objects.equals(this.outputPartialReference, cacheKeyToCheck.getOutputPartialReference())
             && Objects.equals(this.projectId, cacheKeyToCheck.getProjectId())
-            && Objects.equals(this.tenantId, cacheKeyToCheck.getTenantId())
             && this.workflowName.equals(cacheKeyToCheck.getWorkflowName());
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(outputPartialReference, projectId, tenantId, workflowName);
+        return Objects.hash(outputPartialReference, projectId, workflowName);
     }
 }
