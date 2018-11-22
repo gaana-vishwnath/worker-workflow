@@ -71,40 +71,65 @@ Which given a projectId of "myProjectId" would be output after transformation as
 }
 ```
 
-*tenantId*
+*taskSettings*
 
-A source of tenantId may be specified to indicate that a value for a property should come from a `tenantId` parameter that will
- be available during workflow transformation.
-
-```
-"customData": {
-     "myProperty" : { "source" : "tenantId"}
- }
-```
-
-Which given a projectId of "1234" would be output after transformation as;
+A source of taskSettings maybe specified to indicate that a the key specified can be used to look up the correct value on the input message's customdata. If the key is accompanied by a defaultValue then if the value is not present the default value will be used.
 
 ```
 "customData": {
-    "myProperty": '1234'
+  "OPERATION_MODE": {
+    "source": {
+      "taskSettings": {
+        "key": "ee.operationmode",
+	"defaultValue": "DETECT"
+        }
+    }
+  }
 }
 ```
 
-*tenantData*
+*repositorySettings*
 
-A source of tenantData may be specified to indicate that the value of the property should be retrieved from the data processing service's api using the provided key. This allows for per tenant customization of a tenant agnostic workflow.
+A source of repositorySettings can be used to indicate that the worker should call out to get the effective repository configuration values for the key provided. 
+Repository settings also specify where the repository id can be obtained on the document to make the request. The possible supported source values for the repository id are `customdata` or `field`, the key then indicates the field name to check.
 
 ```
 "customData": {
-    "ee.grammarMap": { "source" : "tenantData",
-                       "key": "ee.grammarMap"}
+  "OPERATION_MODE": {
+    "source": {
+      "repositorySettings": {
+	"key": "ee.grammarmap",
+	"repositoryId": {
+	  "source": "field",
+	  "key": "REPOSITORY_ID"
+	}
+      }
+    }
+  }
 }
 ```
-Which given a value of `"{"pii.xml": []}" would output after transformation as:
+
+*sources*
+
+Multiple source can also be specified for a customdata element. This then allows for per job customization of the settings by having one source take precedence over another when supplied.
+For instance, if supplied with a source of taskSettings and a source of repositorySettings for the same customdata element the taskSettings will take precedence over the repositorySetting if it is supplied, otherwise the repositorySettings will take effect.  
 
 ```
 "customData": {
-    "ee.grammarMap": '{"pii.xml": []}'
+  "ee.grammarMap": {
+    "sources": {  
+      "taskSettings": {
+        "key": "ee.grammarmap"
+      },
+      "repositorySettings": {
+	"key": "ee.grammarmap",
+	"repositoryId": {
+	  "source": "field",
+	  "key": "REPOSITORY_ID"
+	}
+      }
+    }
+  }
 }
 ```
 
