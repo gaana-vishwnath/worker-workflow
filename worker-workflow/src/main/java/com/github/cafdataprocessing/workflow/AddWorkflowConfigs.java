@@ -41,7 +41,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,7 +190,7 @@ public final class AddWorkflowConfigs
             LOG.debug("Retrieved value for repository configuration using key: {}", key);
             LOG.debug("Retrieved value for repository configuration is of type: {}", effectiveRepoConfigValue.getValueType());
             // escape the config value in case it has characters that would cause issues in JavaScript
-            return escapeForJavaScript(effectiveRepoConfigValue.getValue());
+            return effectiveRepoConfigValue.getValue();
         } catch (final ApiException ex) {
             if (ex.getCode() == 404) {
                 LOG.error("Unable to obtain repository configuration from processing service for tenant: {} using key: {} as no "
@@ -226,7 +225,7 @@ public final class AddWorkflowConfigs
             LOG.debug("Retrieved value for tenant configuration using key: {}", key);
             LOG.debug("Retrieved value for tenant configuration is of type: {}", effectiveRepoConfigValue.getValueType());
             // escape the config value in case it has characters that would cause issues in JavaScript
-            return escapeForJavaScript(effectiveRepoConfigValue.getValue());
+            return effectiveRepoConfigValue.getValue();
         } catch (final ApiException ex) {
             if (ex.getCode() == 404) {
                 LOG.error("Unable to obtain tenant configuration from processing service for tenant: {} using key: {} as no "
@@ -261,18 +260,5 @@ public final class AddWorkflowConfigs
             throw new RuntimeException("Workflow settings cache key type not recognised."
                 + " Only supposed cache keys are of types WorkflowSettingsRepositoryCacheKey and WorkflowSettingsTenantCacheKey.");
         }
-    }
-
-    /**
-     * Escape characters in the passed value that need to be escaped before being written to JavaScript.
-     *
-     * @param valueToEscape value that should have characters escaped
-     * @return escaped value
-     * @throws NullPointerException if {@code valueToEscape} is null
-     */
-    public static String escapeForJavaScript(final String valueToEscape)
-    {
-        Objects.requireNonNull(valueToEscape);
-        return StringEscapeUtils.escapeEcmaScript(valueToEscape);
     }
 }
