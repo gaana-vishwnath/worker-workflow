@@ -26,9 +26,11 @@ import com.github.cafdataprocessing.workflow.transform.exceptions.InvalidWorkflo
 import com.github.cafdataprocessing.workflow.transform.models.FullAction;
 import com.github.cafdataprocessing.workflow.transform.models.FullProcessingRule;
 import com.github.cafdataprocessing.workflow.transform.models.FullWorkflow;
+import com.github.cafdataprocessing.workflow.transform.models.WorkflowSettings;
 import com.github.cafdataprocessing.workflow.transform.xstream.GeneralEnumToStringConverter;
 import com.github.cafdataprocessing.workflow.transform.xstream.KeyAsElementNameMapConverter;
 import com.github.cafdataprocessing.workflow.transform.xstream.TypeAttributeCollectionConverter;
+import com.google.gson.Gson;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.naming.NoNameCoder;
 import com.thoughtworks.xstream.io.xml.XppDriver;
@@ -50,6 +52,13 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
  */
 public class WorkflowTransformer
 {
+
+    private static final Gson GSON;
+
+    static {
+        GSON = new Gson();
+    }
+
     private WorkflowTransformer()
     {
     }
@@ -68,7 +77,7 @@ public class WorkflowTransformer
      * @throws WorkflowTransformerException if there is an error transforming workflow returned to JavaScript representation
      * @throws NullPointerException if the projectId or tenantId passed to the method is null
      */
-    public static WorkflowRepresentation retrieveAndTransformWorkflowToJavaScript(final WorkflowSpec workflowSpec, 
+    public static WorkflowRepresentation retrieveAndTransformWorkflowToJavaScript(final WorkflowSpec workflowSpec,
                                                                                   final String processingApiUrl)
         throws ApiException, WorkflowTransformerException, WorkflowRetrievalException, InvalidWorkflowSpecificationException
     {
@@ -147,11 +156,11 @@ public class WorkflowTransformer
         Objects.requireNonNull(projectId);
         final WorkflowRepresentation workflow = new WorkflowRepresentation();
         workflow.setWorkflowJavascript(transform("Workflow.xslt", workflowXml, projectId));
-        workflow.setWorkflowSettings(transform("settings.xslt", workflowXml, projectId));
+        workflow.setWorkflowSettings(GSON.fromJson(transform("settings.xslt", workflowXml, projectId), WorkflowSettings.class));
         return workflow;
     }
 
-    private static String transform(final String workflowResourceName, final String workflowXml, final String projectId) 
+    private static String transform(final String workflowResourceName, final String workflowXml, final String projectId)
         throws WorkflowTransformerException, TransformerFactoryConfigurationError
     {
         final InputStream defaultXsltStream = WorkflowTransformer.class.getClassLoader().getResourceAsStream(workflowResourceName);

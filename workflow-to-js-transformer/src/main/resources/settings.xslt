@@ -11,7 +11,7 @@
     </xsl:template>
     <xsl:template name="requiredTaskSettings">"taskSettings": [<xsl:for-each select="//taskSettings">"<xsl:value-of select="key"/>"<xsl:if test="position() != last()">, </xsl:if></xsl:for-each>],
         </xsl:template>
-    <xsl:template name="requiredRepositorySettings">"repositorySettings": [<xsl:for-each select="//repositorySettings">{"<xsl:value-of select="key"/>": {"source": "<xsl:value-of select="repositoryId/source"/>", "key": "<xsl:value-of select="repositoryId/key"/>"}<xsl:if test="position() != last()">, </xsl:if>}</xsl:for-each>]
+    <xsl:template name="requiredRepositorySettings">"repositorySettings": {<xsl:for-each select="//repositorySettings">"<xsl:value-of select="key"/>": {"source": "<xsl:value-of select="repositoryId/source"/>", "key": "<xsl:value-of select="repositoryId/key"/>"}<xsl:if test="position() != last()">, </xsl:if></xsl:for-each>}
     </xsl:template>
     <xsl:template name="requiredTenantSettings">"tenantSettings": [<xsl:for-each select="//tenantSettings">"<xsl:value-of select="key"/>"<xsl:if test="position() != last()">, </xsl:if></xsl:for-each>]</xsl:template>
 </xsl:stylesheet>

@@ -15,10 +15,12 @@
  */
 package com.github.cafdataprocessing.workflow.transform;
 
+import com.github.cafdataprocessing.workflow.transform.models.WorkflowSettings;
+
 public final class WorkflowRepresentation
 {
     private String workflowJavascript;
-    private String workflowSettings;
+    private WorkflowSettings workflowSettings;
 
     /**
      * @return the workflowJavascript
@@ -31,7 +33,7 @@ public final class WorkflowRepresentation
     /**
      * @param workflowJavascript the workflowJavascript to set
      */
-    public void setWorkflowJavascript(String workflowJavascript)
+    public void setWorkflowJavascript(final String workflowJavascript)
     {
         this.workflowJavascript = workflowJavascript;
     }
@@ -39,7 +41,7 @@ public final class WorkflowRepresentation
     /**
      * @return the workflowSettings
      */
-    public String getWorkflowSettings()
+    public WorkflowSettings getWorkflowSettings()
     {
         return workflowSettings;
     }
@@ -47,7 +49,7 @@ public final class WorkflowRepresentation
     /**
      * @param workflowSettings the workflowSettings to set
      */
-    public void setWorkflowSettings(String workflowSettings)
+    public void setWorkflowSettings(final WorkflowSettings workflowSettings)
     {
         this.workflowSettings = workflowSettings;
     }
