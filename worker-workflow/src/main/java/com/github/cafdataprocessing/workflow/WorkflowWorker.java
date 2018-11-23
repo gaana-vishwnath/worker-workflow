@@ -49,7 +49,7 @@ public final class WorkflowWorker implements DocumentWorker
     private final String processingApiUrl;
     private final AdminApi workflowAdminApi;
     private final TransformedWorkflowCache workflowCache;
-    private final AddWorkflowConfigs addWorkflowConfigs;
+    private final WorkflowSettingsRetriever addWorkflowConfigs;
 
     /**
      * Instantiates a WorkflowWorker instance to process documents, evaluating them against the workflow referred to by the document.
@@ -66,7 +66,7 @@ public final class WorkflowWorker implements DocumentWorker
             workflowWorkerConfiguration.getWorkflowCachePeriod(),
             dataStore,
             processingApiUrl);
-        this.addWorkflowConfigs = new AddWorkflowConfigs();
+        this.addWorkflowConfigs = new WorkflowSettingsRetriever();
     }
 
     /**

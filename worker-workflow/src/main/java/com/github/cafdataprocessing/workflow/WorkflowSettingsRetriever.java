@@ -44,16 +44,16 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class AddWorkflowConfigs
+public final class WorkflowSettingsRetriever
 {
-    private final static Logger LOGGER = LoggerFactory.getLogger(AddWorkflowConfigs.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(WorkflowSettingsRetriever.class);
     private final LoadingCache<WorkflowSettingsCacheKey, String> settingsCache;
     private final ApiClient apiClient;
     private final Gson gson;
     private final RepositoryConfigurationApi repositoryConfigApi;
     private final TenantConfigurationApi tenantConfigApi;
 
-    public AddWorkflowConfigs()
+    public WorkflowSettingsRetriever()
     {
         apiClient = new ApiClient();
         settingsCache = CacheBuilder.newBuilder()
@@ -72,9 +72,9 @@ public final class AddWorkflowConfigs
                 }
             });
         gson = new Gson();
-        final String processingSericeBaseUrl = System.getenv("CAF_WORKFLOW_WORKER_PROCESSING_API_URL");
-        Objects.requireNonNull(processingSericeBaseUrl);
-        apiClient.setBasePath(processingSericeBaseUrl);
+        final String processingServiceBaseUrl = System.getenv("CAF_WORKFLOW_WORKER_PROCESSING_API_URL");
+        Objects.requireNonNull(processingServiceBaseUrl);
+        apiClient.setBasePath(processingServiceBaseUrl);
         tenantConfigApi = new TenantConfigurationApi(apiClient);
         repositoryConfigApi = new RepositoryConfigurationApi(apiClient);
     }
