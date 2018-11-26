@@ -91,7 +91,7 @@ A source of taskSettings maybe specified to indicate that a the key specified ca
 *repositorySettings*
 
 A source of repositorySettings can be used to indicate that the worker should call out to get the effective repository configuration values for the key provided. 
-Repository settings also specify where the repository id can be obtained on the document to make the request. The possible supported source values for the repository id are `customdata` or `field`, the key then indicates the field name to check.
+Repository settings also specify where the repository id can be obtained on the document to make the request. The possible supported source values for the repository id are `CUSTOMDATA` or `FIELD`, the key then indicates the field name to check.
 
 ```
 "customData": {
@@ -100,7 +100,7 @@ Repository settings also specify where the repository id can be obtained on the 
       "repositorySettings": {
 	"key": "ee.grammarmap",
 	"repositoryId": {
-	  "source": "field",
+	  "source": "FIELD",
 	  "key": "REPOSITORY_ID"
 	}
       }
