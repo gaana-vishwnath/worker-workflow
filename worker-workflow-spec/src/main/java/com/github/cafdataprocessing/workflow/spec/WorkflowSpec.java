@@ -24,20 +24,17 @@ public class WorkflowSpec
 {
     final String outputPartialReference;
     final String projectId;
-    final String tenantId;
 
     /**
      * Create the workflow specification object using the partial storage reference, project ID and workflow ID provided.
      *
      * @param outputPartialReference partial storage reference for the transformed workflow this key is to be associated with.
      * @param projectId project ID of the transformed workflow this key is to be associated with.
-     * @param tenantId a tenant ID to use in evaluating the workflow.
      */
-    public WorkflowSpec(final String outputPartialReference, final String projectId, final String tenantId)
+    public WorkflowSpec(final String outputPartialReference, final String projectId)
     {
         this.outputPartialReference = outputPartialReference;
         this.projectId = projectId;
-        this.tenantId = tenantId;
     }
 
     public String getOutputPartialReference()
@@ -50,14 +47,9 @@ public class WorkflowSpec
         return projectId;
     }
 
-    public String getTenantId()
-    {
-        return tenantId;
-    }
-
     @Override
     public int hashCode()
     {
-        return Objects.hash(outputPartialReference, projectId, tenantId);
+        return Objects.hash(outputPartialReference, projectId);
     }
 }

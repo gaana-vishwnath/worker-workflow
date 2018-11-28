@@ -15,12 +15,14 @@
  */
 package com.github.cafdataprocessing.workflow;
 
+import com.github.cafdataprocessing.workflow.transform.WorkflowRepresentation;
+
 /**
  * Holds information about a transformed workflow
  */
 final class TransformWorkflowResult
 {
-    private final String transformedWorkflow;
+    private final WorkflowRepresentation workflowRepresentation;
     private final String workflowStorageRef;
 
     /**
@@ -29,15 +31,15 @@ final class TransformWorkflowResult
      * @param transformedWorkflow the transformed workflow as a string.
      * @param workflowStorageRef storage reference to the transformed workflow in the data store.
      */
-    public TransformWorkflowResult(final String transformedWorkflow, final String workflowStorageRef)
+    public TransformWorkflowResult(final WorkflowRepresentation transformedWorkflow, final String workflowStorageRef)
     {
-        this.transformedWorkflow = transformedWorkflow;
+        this.workflowRepresentation = transformedWorkflow;
         this.workflowStorageRef = workflowStorageRef;
     }
 
-    public String getTransformedWorkflow()
+    public WorkflowRepresentation getWorkflowRepresentation()
     {
-        return transformedWorkflow;
+        return workflowRepresentation;
     }
 
     public String getWorkflowStorageRef()

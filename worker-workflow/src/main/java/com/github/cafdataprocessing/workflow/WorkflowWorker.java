@@ -49,6 +49,7 @@ public final class WorkflowWorker implements DocumentWorker
     private final String processingApiUrl;
     private final AdminApi workflowAdminApi;
     private final TransformedWorkflowCache workflowCache;
+    private final WorkflowSettingsRetriever workflowSettingsRetriever;
 
     /**
      * Instantiates a WorkflowWorker instance to process documents, evaluating them against the workflow referred to by the document.
@@ -65,6 +66,7 @@ public final class WorkflowWorker implements DocumentWorker
             workflowWorkerConfiguration.getWorkflowCachePeriod(),
             dataStore,
             processingApiUrl);
+        this.workflowSettingsRetriever = new WorkflowSettingsRetriever();
     }
 
     /**
@@ -152,13 +154,20 @@ public final class WorkflowWorker implements DocumentWorker
 
         // Add the workflow scripts to the document task.
         try {
-            WorkflowProcessingScripts.setScripts(
-                document,
-                transformWorkflowResult.getTransformedWorkflow(),
-                transformWorkflowResult.getWorkflowStorageRef());
-        } catch (final ScriptException e) {
-            LOG.error("A failure occurred trying to add the scripts to the task.", e);
-            document.addFailure(WorkflowWorkerConstants.ErrorCodes.ADD_WORKFLOW_SCRIPTS_FAILED, e.getMessage());
+            // Retrieve required workflow settings
+            workflowSettingsRetriever.retrieveWorkflowSettings(transformWorkflowResult.getWorkflowRepresentation().getWorkflowSettings(),
+                                                       document);
+            try {
+                WorkflowProcessingScripts.setScripts(
+                    document,
+                    transformWorkflowResult.getWorkflowRepresentation().getWorkflowJavascript(),
+                    transformWorkflowResult.getWorkflowStorageRef());
+            } catch (final ScriptException e) {
+                LOG.error("A failure occurred trying to add the scripts to the task.", e);
+                document.addFailure(WorkflowWorkerConstants.ErrorCodes.ADD_WORKFLOW_SCRIPTS_FAILED, e.getMessage());
+            }
+        } catch (final ApiException ex) {
+            document.addFailure("API_EXCEPTION", ex.getMessage());
         }
     }
 

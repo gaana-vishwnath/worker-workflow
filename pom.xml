@@ -40,18 +40,17 @@
         <caf.worker-document-framework.version>4.1.0-SNAPSHOT</caf.worker-document-framework.version>
         <copyrightYear>2018</copyrightYear>
         <copyrightNotice>Copyright ${project.inceptionYear}-${copyrightYear} Micro Focus or one of its affiliates.</copyrightNotice>
-        <corePolicyVersion>1.1.0-94</corePolicyVersion>
+        <corePolicyVersion>1.2.0-SNAPSHOT</corePolicyVersion>
         <corePolicyElasticsearchContainerName>
-            cafdataprocessing/policy-admin-elasticsearch:1.1.0
+            cafinternal/prereleases:policy-admin-elasticsearch-1.2.0-SNAPSHOT
         </corePolicyElasticsearchContainerName>
         <dockerHubOrganization>cafdataprocessing</dockerHubOrganization>
         <dockerCafDataProcessingOrg>
             ${dockerImagePrefix}${dockerHubOrganization}${dockerOrgSeperator}
         </dockerCafDataProcessingOrg>
         <dockerProjectVersion>${dockerVersionSeperator}${project.version}</dockerProjectVersion>
-        <processingServiceVersion>1.4.0-274</processingServiceVersion>
         <processingServiceContainerName>
-            cafdataprocessing/processing-service:1.4.0
+            cafinternal/prereleases:processing-service-1.5.0-SNAPSHOT
         </processingServiceContainerName>
         <gitRepo>https://github.com/CAFDataProcessing/worker-workflow</gitRepo>
     </properties>
@@ -84,7 +83,7 @@
             <dependency>
                 <groupId>com.github.cafdataprocessing</groupId>
                 <artifactId>processing-service-client</artifactId>
-                <version>${processingServiceVersion}</version>
+                <version>1.5.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.github.cafdataprocessing</groupId>

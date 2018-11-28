@@ -37,10 +37,35 @@
                         <settings class="linked-hash-map">
                             <workerName>testworker</workerName>
                             <customData class="linked-hash-map">
+                                <OPERATION_MODE class="linked-hash-map">
+                                    <source>
+                                        <taskSettings>
+                                            <key>ee.operationmode</key>
+                                            <defaultValue>DETECT</defaultValue>
+                                        </taskSettings>
+                                    </source>
+                                </OPERATION_MODE>
                                 <ee.grammarMap class="linked-hash-map">
-                                    <source>tenantData</source>
-                                    <key>ee.grammarMap</key>
+                                    <sources class="linked-hash-map">
+                                        <taskSettings class="linked-hash-map">
+                                            <key>ee.grammarmap</key>
+                                        </taskSettings>
+                                        <repositorySettings class="linked-hash-map">
+                                            <key>ee.grammarmap</key>
+                                            <repositoryId class="linked-hash-map">
+                                                <source>field</source>
+                                                <key>REPOSITORY_ID</key>
+                                            </repositoryId>
+                                        </repositorySettings>
+                                    </sources>
                                 </ee.grammarMap>
+                                <tenantId class="linked-hash-map">
+                                    <source>
+                                        <taskSettings>
+                                            <key>tenantId</key>
+                                        </taskSettings>
+                                    </source>
+                                </tenantId>
                             </customData>
                         </settings>
                         <name>String condition action</name>
