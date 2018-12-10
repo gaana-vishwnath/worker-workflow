@@ -50,7 +50,7 @@
         </dockerCafDataProcessingOrg>
         <dockerProjectVersion>${dockerVersionSeperator}${project.version}</dockerProjectVersion>
         <processingServiceContainerName>
-            cafinternal/prereleases:processing-service-1.5.0-SNAPSHOT
+            cafdataprocessing/processing-service:1
         </processingServiceContainerName>
         <gitRepo>https://github.com/CAFDataProcessing/worker-workflow</gitRepo>
     </properties>
@@ -83,7 +83,7 @@
             <dependency>
                 <groupId>com.github.cafdataprocessing</groupId>
                 <artifactId>processing-service-client</artifactId>
-                <version>1.5.0-SNAPSHOT</version>
+                <version>1.5.0-390</version>
             </dependency>
             <dependency>
                 <groupId>com.github.cafdataprocessing</groupId>
