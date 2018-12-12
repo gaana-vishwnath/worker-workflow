@@ -40,9 +40,9 @@
         <caf.worker-document-framework.version>4.1.0-292</caf.worker-document-framework.version>
         <copyrightYear>2018</copyrightYear>
         <copyrightNotice>Copyright ${project.inceptionYear}-${copyrightYear} Micro Focus or one of its affiliates.</copyrightNotice>
-        <corePolicyVersion>1.2.0-SNAPSHOT</corePolicyVersion>
+        <corePolicyVersion>1.2.0-165</corePolicyVersion>
         <corePolicyElasticsearchContainerName>
-            cafinternal/prereleases:policy-admin-elasticsearch-1.2.0-SNAPSHOT
+            cafdataprocessing/policy-admin-elasticsearch:1.2.0
         </corePolicyElasticsearchContainerName>
         <dockerHubOrganization>cafdataprocessing</dockerHubOrganization>
         <dockerCafDataProcessingOrg>
