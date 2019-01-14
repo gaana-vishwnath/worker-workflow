@@ -123,36 +123,11 @@
                 <artifactId>xstream</artifactId>
                 <version>1.4.8</version>
             </dependency>
-            <!--<dependency>
-                <groupId>com.github.workerframework</groupId>
-                <artifactId>worker-api</artifactId>
-                <version>3.1.0-490</version>
-            </dependency>-->
-            <!--<dependency>
-                <groupId>com.github.cafdataprocessing</groupId>
-                <artifactId>worker-document-shared</artifactId>
-                <version>4.1.0-292</version>
-            </dependency>-->
-            <!--<dependency>
-                <groupId>com.github.cafapi</groupId>
-                <artifactId>caf-api</artifactId>
-                <version>1.15.0-1</version>
-            </dependency>-->
-            <!--<dependency>
-                <groupId>com.sun.jersey</groupId>
-                <artifactId>jersey-client</artifactId>
-                <version>1.19</version>
-            </dependency>-->
             <dependency>
                 <groupId>org.json</groupId>
                 <artifactId>json</artifactId>
                 <version>20160212</version>
             </dependency>
-            <!--<dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.25</version>
-            </dependency>-->
         </dependencies>
     </dependencyManagement>
 
