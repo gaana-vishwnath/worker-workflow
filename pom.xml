@@ -40,7 +40,6 @@
         <caf.worker-document-framework.version>4.1.0-292</caf.worker-document-framework.version>
         <copyrightYear>2018</copyrightYear>
         <copyrightNotice>Copyright ${project.inceptionYear}-${copyrightYear} Micro Focus or one of its affiliates.</copyrightNotice>
-        <corePolicyVersion>1.2.0-165</corePolicyVersion>
         <corePolicyElasticsearchContainerName>
             cafdataprocessing/policy-admin-elasticsearch:1.2.0
         </corePolicyElasticsearchContainerName>
@@ -91,7 +90,7 @@
             <dependency>
                 <groupId>com.github.cafdataprocessing</groupId>
                 <artifactId>corepolicy-database</artifactId>
-                <version>${corePolicyVersion}</version>
+                <version>1.2.0-165</version>
             </dependency>
             <dependency>
                 <groupId>com.github.cafdataprocessing</groupId>

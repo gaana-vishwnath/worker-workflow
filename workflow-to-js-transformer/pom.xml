@@ -72,8 +72,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
+            <groupId>com.github.cafdataprocessing</groupId>
+            <artifactId>worker-document-shared</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.cafapi</groupId>
+            <artifactId>caf-api</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -87,13 +92,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.cafdataprocessing</groupId>
-            <artifactId>worker-document-shared</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.github.cafapi</groupId>
-            <artifactId>caf-api</artifactId>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
