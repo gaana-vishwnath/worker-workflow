@@ -96,6 +96,14 @@ public final class WorkflowWorker implements DocumentWorker
             LOG.error("Problem encountered when contacting Processing API to check health: ", e);
             healthMonitor.reportUnhealthy("Processing API communication is unhealthy: " + e.getMessage());
         }
+
+        try {
+            workflowSettingsRetriever.checkHealth();
+        }
+        catch (final Exception e) {
+            LOG.error("Problem encountered when contacting Settings Service to check health: ", e);
+            healthMonitor.reportUnhealthy("Settings Service communication is unhealthy: " + e.getMessage());
+        }
     }
 
     /**
@@ -166,7 +174,7 @@ public final class WorkflowWorker implements DocumentWorker
                 LOG.error("A failure occurred trying to add the scripts to the task.", e);
                 document.addFailure(WorkflowWorkerConstants.ErrorCodes.ADD_WORKFLOW_SCRIPTS_FAILED, e.getMessage());
             }
-        } catch (final ApiException ex) {
+        } catch (final com.microfocus.darwin.settings.client.ApiException ex) {
             document.addFailure("API_EXCEPTION", ex.getMessage());
         }
     }
