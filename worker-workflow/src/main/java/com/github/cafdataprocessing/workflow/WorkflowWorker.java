@@ -26,6 +26,7 @@ import com.github.cafdataprocessing.workflow.constants.WorkflowWorkerConstants;
 import com.github.cafdataprocessing.workflow.transform.WorkflowRetrievalException;
 import com.github.cafdataprocessing.workflow.transform.WorkflowTransformerException;
 import com.github.cafdataprocessing.workflow.transform.exceptions.InvalidWorkflowSpecificationException;
+import com.google.gson.Gson;
 import com.hpe.caf.api.ConfigurationException;
 import com.hpe.caf.api.ConfigurationSource;
 import com.hpe.caf.api.worker.DataStore;
@@ -162,6 +163,8 @@ public final class WorkflowWorker implements DocumentWorker
 
         // Add the workflow scripts to the document task.
         try {
+            final Gson gson = new Gson();
+            System.out.println(gson.toJson(transformWorkflowResult.getWorkflowRepresentation().getWorkflowSettings()));
             // Retrieve required workflow settings
             workflowSettingsRetriever.retrieveWorkflowSettings(transformWorkflowResult.getWorkflowRepresentation().getWorkflowSettings(),
                                                        document);
