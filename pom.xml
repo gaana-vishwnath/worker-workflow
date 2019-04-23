@@ -51,7 +51,8 @@
         <processingServiceContainerName>
             cafdataprocessing/processing-service:1
         </processingServiceContainerName>
-        <settingsServiceContainerName>cafinternal/prereleases:settings-service-1.0.0-SNAPSHOT</settingsServiceContainerName>
+        <!-- updated the settings-service version -->
+        <settingsServiceContainerName>cafinternal/settings-service:1</settingsServiceContainerName>
         <gitRepo>https://github.com/CAFDataProcessing/worker-workflow</gitRepo>
         <enforceCorrectDependencies>true</enforceCorrectDependencies>
     </properties>
